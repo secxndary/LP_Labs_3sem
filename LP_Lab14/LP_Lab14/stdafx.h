@@ -1,0 +1,12 @@
+#pragma once
+#include <conio.h>
+#include <stdio.h>
+#include <iostream>
+#include <io.h>
+#include <fcntl.h>
+#include "FST.h"
+#include "Error.h"
+#include "Parm.h"
+#include "In.h"
+#include "Log.h"
+#include "Out.h"
