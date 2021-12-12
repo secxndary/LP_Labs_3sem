@@ -24,9 +24,6 @@
     <ClCompile Include="Generator.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Greibach.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="In.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -55,6 +52,12 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="SemAnalysis.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Error.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Greibach.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,340 +1,217 @@
 #include "pch.h"
-#include <iosfwd>
-#include "Generator.h"
-#include "Parm.h"
-#include "LexAnalysis.h"
-#include "IT.h"
-#include "LT.h"
-#include <sstream>
-#include <cstring>
+#include "Header.h"
+#define GRB_ERROR_SERIES 600
 
+typedef short GRBALPHABET;
 
-using namespace std;
-
-namespace Gener
+namespace GRB
 {
-	static int conditionnum = 0;
+	Greibach greibach(NS('S'), TS('$'), 16,
 
-	string itoS(int x) { stringstream r;  r << x;  return r.str(); }
-	string genCallFuncCode(Lexer::LEX& tables, Log::LOG& log, int i)
+		Rule(NS('S'), GRB_ERROR_SERIES, 3,						// Неверная структура программы	
+			Rule::Chain(6, TS('t'), TS('f'), TS('i'), NS('P'), NS('T'), NS('S')),
+			Rule::Chain(6, TS('p'), TS('f'), TS('i'), NS('P'), NS('G'), NS('S')),
+			Rule::Chain(4, TS('m'), TS('['), NS('K'), TS(']'))
+		),
+
+		Rule(NS('T'), GRB_ERROR_SERIES + 2, 2,					// Ошибка в теле функции
+			Rule::Chain(5, TS('['), TS('e'), NS('V'), TS(';'), TS(']')),
+			Rule::Chain(6, TS('['), NS('K'), TS('e'), NS('V'), TS(';'), TS(']'))
+		),
+
+		Rule(NS('G'), GRB_ERROR_SERIES + 3, 2,					// Ошибка в теле процедуры
+			Rule::Chain(4, TS('['), TS('e'), TS(';'), TS(']')),
+			Rule::Chain(5, TS('['), NS('K'), TS('e'), TS(';'), TS(']'))
+		),
+
+		Rule(NS('P'), GRB_ERROR_SERIES + 1, 2,					// Не найден список параметров функции	
+			Rule::Chain(3, TS('('), NS('E'), TS(')')),
+			Rule::Chain(2, TS('('), TS(')'))
+		),
+
+		Rule(NS('E'), GRB_ERROR_SERIES + 4, 2,					// Ошибка в списке параметров функции						
+			Rule::Chain(4, TS('t'), TS('i'), TS(','), NS('E')),
+			Rule::Chain(2, TS('t'), TS('i'))
+		),
+
+		Rule(NS('F'), GRB_ERROR_SERIES + 5, 2,					// Ошибка в вызове функции						
+			Rule::Chain(3, TS('('), NS('N'), TS(')')),
+			Rule::Chain(2, TS('('), TS(')'))
+		),
+
+		Rule(NS('N'), GRB_ERROR_SERIES + 6, 4,					// Ошибка в списке параметров функции		
+			Rule::Chain(1, TS('i')),
+			Rule::Chain(1, TS('l')),
+			Rule::Chain(3, TS('i'), TS(','), NS('N')),
+			Rule::Chain(3, TS('l'), TS(','), NS('N'))
+		),
+
+		Rule(NS('R'), GRB_ERROR_SERIES + 7, 5,					// Ошибка при констуировании цикла/условного выражения	
+			Rule::Chain(3, TS('r'), NS('Y'), TS('#')),
+			Rule::Chain(3, TS('w'), NS('Y'), TS('#')),
+			Rule::Chain(3, TS('c'), NS('Y'), TS('#')),
+			Rule::Chain(5, TS('r'), NS('Y'), TS('w'), NS('Y'), TS('#')),
+			Rule::Chain(5, TS('w'), NS('Y'), TS('r'), NS('Y'), TS('#'))
+		),
+
+		Rule(NS('Y'), GRB_ERROR_SERIES + 8, 1,					// Ошибка в теле цикла/условного выражения			
+			Rule::Chain(3, TS('['), NS('X'), TS(']'))
+		),
+
+		Rule(NS('Z'), GRB_ERROR_SERIES + 9, 3,					// Ошибка в условии цикла/условного выражения	
+			Rule::Chain(3, TS('i'), NS('L'), TS('i')),
+			Rule::Chain(3, TS('i'), NS('L'), TS('l')),
+			Rule::Chain(3, TS('l'), NS('L'), TS('i'))
+		),
+
+		Rule(NS('L'), GRB_ERROR_SERIES + 10, 4,					// Неверный условный оператор		
+			Rule::Chain(1, TS('<')),
+			Rule::Chain(1, TS('>')),
+			Rule::Chain(1, TS('&')),
+			Rule::Chain(1, TS('!'))
+		),
+
+		Rule(NS('A'), GRB_ERROR_SERIES + 11, 6,					// Неверный арифметический оператор
+			Rule::Chain(1, TS('+')),
+			Rule::Chain(1, TS('-')),
+			Rule::Chain(1, TS('*')),
+			Rule::Chain(1, TS('/')),
+			Rule::Chain(1, TS('}')),
+			Rule::Chain(1, TS('{'))
+		),
+
+		Rule(NS('V'), GRB_ERROR_SERIES + 12, 3,					// Неверное выражение. Ожидаются только идентификаторы и литералы
+			Rule::Chain(1, TS('l')),
+			Rule::Chain(1, TS('i')),
+			Rule::Chain(1, TS('q'))
+		),
+
+		Rule(NS('W'), GRB_ERROR_SERIES + 13, 8,					// Ошибка в арифметичском выражении
+			Rule::Chain(1, TS('i')),
+			Rule::Chain(1, TS('l')),
+			Rule::Chain(3, TS('('), NS('W'), TS(')')),
+			Rule::Chain(5, TS('('), NS('W'), TS(')'), NS('A'), NS('W')),
+			Rule::Chain(2, TS('i'), NS('F')),
+			Rule::Chain(3, TS('i'), NS('A'), NS('W')),
+			Rule::Chain(3, TS('l'), NS('A'), NS('W')),
+			Rule::Chain(4, TS('i'), NS('F'), NS('A'), NS('W'))
+		),
+
+		Rule(NS('K'), GRB_ERROR_SERIES + 14, 14,				// Недопустимая синтаксическая конструкция
+			Rule::Chain(7, TS('n'), TS('t'), TS('i'), TS('='), NS('V'), TS(';'), NS('K')),	// декларация + присваивание
+			Rule::Chain(5, TS('n'), TS('t'), TS('i'), TS(';'), NS('K')),	// декларация
+			Rule::Chain(5, TS('i'), TS('='), NS('W'), TS(';'), NS('K')),	// присваивание
+
+			Rule::Chain(4, TS('o'), NS('V'), TS(';'), NS('K')),				// вывод
+			Rule::Chain(3, TS('^'), TS(';'), NS('K')),						// перевод строки
+			Rule::Chain(5, TS('?'), NS('Z'), TS('#'), NS('R'), NS('K')),	// condition
+			Rule::Chain(4, TS('i'), NS('F'), TS(';'), NS('K')),				// вызов функции
+
+			Rule::Chain(6, TS('n'), TS('t'), TS('i'), TS('='), NS('V'), TS(';')),	// декларация + присваивание
+			Rule::Chain(4, TS('i'), TS('='), NS('W'), TS(';')),			// присваивание
+			Rule::Chain(4, TS('n'), TS('t'), TS('i'), TS(';')),			// декларация
+			Rule::Chain(3, TS('o'), NS('V'), TS(';')),					// вывод
+			Rule::Chain(2, TS('^'), TS(';')),							// перевод строки
+			Rule::Chain(4, TS('?'), NS('Z'), TS('#'), NS('R')),			// condition
+			Rule::Chain(3, TS('i'), NS('F'), TS(';'))					// вызов функции
+		),
+
+		Rule(NS('X'), GRB_ERROR_SERIES + 15, 8,				// Недопустимая синтаксическая конструкция в теле цикла/условного выражения	
+			Rule::Chain(5, TS('i'), TS('='), NS('W'), TS(';'), NS('X')),	// присваивание
+			Rule::Chain(4, TS('o'), NS('V'), TS(';'), NS('X')),				// вывод
+			Rule::Chain(3, TS('^'), TS(';'), NS('X')),						// перевод строки
+			Rule::Chain(4, TS('i'), NS('F'), TS(';'), NS('X')),				// вызов функции
+
+			Rule::Chain(4, TS('i'), TS('='), NS('W'), TS(';')),			// присваивание
+			Rule::Chain(3, TS('o'), NS('V'), TS(';')),					// вывод
+			Rule::Chain(2, TS('^'), TS(';')),							// перевод строки
+			Rule::Chain(3, TS('i'), NS('F'), TS(';'))					// вызов функции
+		)
+	);
+
+
+	Rule::Chain::Chain(short psize, GRBALPHABET s, ...)
 	{
-		string str;
+		nt = new GRBALPHABET[size = psize];
+		int* p = (int*)&s;
+		for (short i = 0; i < psize; ++i)
+			nt[i] = (GRBALPHABET)p[i];
+	};
 
-		IT::Entry e = ITENTRY(i); // идентификатор вызываемой функции
-		stack <IT::Entry> temp;
-		bool stnd = (e.idtype == IT::IDTYPE::S);
-
-		for (int j = i + 1; LEXEMA(j) != LEX_RIGHTTHESIS; j++)
-		{
-			if (LEXEMA(j) == LEX_ID || LEXEMA(j) == LEX_LITERAL)
-				temp.push(ITENTRY(j)); // // заполняем стек в прямом порядке	
-		}
-		str += "\n";
-
-		// раскручиваем стек
-		while (!temp.empty())
-		{
-			if (temp.top().idtype == IT::IDTYPE::L && temp.top().iddatatype == IT::IDDATATYPE::STR)
-				str = str + "push offset " + temp.top().id + "\n";
-			else   str = str + "push " + temp.top().id + "\n";
-			temp.pop();
-		}
-
-		if (stnd)
-			str += "push offset buffer\n";
-		str = str + "call " + string(e.id) + IN_CODE_ENDL;
-		// выравниваниe стека
-		/*if (e.value.params.count != 0) str = str + "add esp, " + itoS(4 * e.value.params.count + 4) + "\n";*/
-
-		return str;
-	}
-	string genEqualCode(Lexer::LEX& tables, Log::LOG& log, int i)
+	Rule::Rule(GRBALPHABET pnn, int piderror, short psize, Chain c, ...)
 	{
-		string str;
-		IT::Entry e1 = ITENTRY(i - 1); // левый операнд
+		nn = pnn;
+		iderror = piderror;
+		chains = new Chain[size = psize];
+		Chain* p = &c;
+		for (int i = 0; i < size; ++i)
+			chains[i] = p[i];
+	};
 
-		switch (e1.iddatatype)
-		{
-		case IT::IDDATATYPE::NUM:
-		{
-			bool first = true;
-			for (int j = i + 1; LEXEMA(j) != LEX_SEPARATOR; j++)
-			{
-				switch (LEXEMA(j))
-				{
-				case LEX_LITERAL:
-				case LEX_ID:
-				{
-					if (ITENTRY(j).idtype == IT::IDTYPE::F || ITENTRY(j).idtype == IT::IDTYPE::S) // если в выражении вызов функции
-					{
-						str = str + genCallFuncCode(tables, log, j); // функция возвращает результат в eax
-						str = str + "push eax\n";				// результат выражения в стек для дальнейшего вычисления выражения
-						while (LEXEMA(j) != LEX_RIGHTTHESIS) j++;
-						break;
-					}
-					else  str = str + "push " + ITENTRY(j).id + "\n";
-					break;
-				}
-				case LEX_PLUS:
-					str = str + "pop ebx\npop eax\nadd eax, ebx\npush eax\n"; break;
-				case LEX_MINUS:
-					str = str + "pop ebx\npop eax\nsub eax, ebx\npush eax\n"; break;
-				case LEX_STAR:
-					str = str + "pop ebx\npop eax\nimul eax, ebx\npush eax\n"; break;
-				case LEX_DIRSLASH:
-					str = str + "pop ebx\npop eax\ncdq\nidiv ebx\npush eax\n"; break;
-				case LEX_RIGHT:
-					str = str + "pop ebx \npop eax \nmov cl, bl \nshr eax, cl\npush eax\n"; break;
-				case LEX_LEFT:
-					str = str + "pop ebx \npop eax \nmov cl, bl \nshl eax, cl\npush eax\n"; break;
-				}
-			} // цикл вычисления
 
-			str = str + "\npop ebx\nmov " + e1.id + ", ebx\n";			// вычисленное выражение в ebx 
-			break;
-		}
-		case IT::IDDATATYPE::STR:// разрешить присваивать строкам только строки, литералы и вызовы функций
-		{
-			char lex = LEXEMA(i + 1);
-			IT::Entry e2 = ITENTRY(i + 1);
-			if (lex == LEX_ID && (e2.idtype == IT::IDTYPE::F || e2.idtype == IT::IDTYPE::S)) // вызов функции
-			{
-				str += genCallFuncCode(tables, log, i + 1);
-				str = str + "mov " + e1.id + ", eax";
-			}
-			else if (lex == LEX_LITERAL) // литерал
-			{
-				str = str + "mov " + e1.id + ", offset " + e2.id;
-			}
-			else // ид(переменная) - через регистр
-			{
-				str = str + "mov ecx, " + e2.id + "\nmov " + e1.id + ", ecx";
-			}
-		}
-		}
-
-		return str;
-	}
-	string genFunctionCode(Lexer::LEX& tables, int i, string funcname, int pcount)
+	Greibach::Greibach(GRBALPHABET pstartN, GRBALPHABET pstbottom, short psize, Rule r, ...)
 	{
-		string str;
-		IT::Entry e = ITENTRY(i + 1);
-		IT::IDDATATYPE type = e.iddatatype;
-
-		str = SEPSTR(funcname) + string(e.id) + string(" PROC,\n\t");
-		//дальше параметры
-		int j = i + 3; // начало - то что сразу после открывающей скобки
-		while (LEXEMA(j) != LEX_RIGHTTHESIS) // пока параметры не кончатся
-		{
-			if (LEXEMA(j) == LEX_ID) // параметр
-				str = str + string(ITENTRY(j).id) + (ITENTRY(j).iddatatype == IT::IDDATATYPE::NUM ? " : sdword, " : " : dword, ");
-			j++;
-		}
-		int f = str.rfind(',');
-		if (f > 0)
-			str[f] = IN_CODE_SPACE;
-
-		str += "\n; --- save registers ---\npush ebx\npush edx\n; ----------------------";
-
-		return str;
+		startN = pstartN;
+		stbottomT = pstbottom;
+		rules = new Rule[size = psize];
+		Rule* p = &r;
+		for (int i = 0; i < size; ++i)
+			rules[i] = p[i];
 	}
-	string genExitCode(Lexer::LEX& tables, int i, string funcname, int pcount)
+
+	Greibach getGreibach()
 	{
-		string str = "; --- restore registers ---\npop edx\npop ebx\n; -------------------------\n";
-		if (LEXEMA(i + 1) != LEX_SEPARATOR)	// выход из функции (вернуть значение)
-		{
-			str = str + "mov eax, " + string(ITENTRY(i + 1).id) + "\n";
-		}
-		str += "ret\n";
-		str += funcname + " ENDP" + SEPSTREMP;
-		return str;
+		return greibach;
 	}
-	string genConditionCode(Lexer::LEX& tables, int i, string& cyclecode)
+
+	short Greibach::getRule(GRBALPHABET pnn, Rule& prule)
 	{
-		string str;
-		conditionnum++;
-		cyclecode.clear();
-		IT::Entry lft = ITENTRY(i + 1); // левый операнд
-		IT::Entry rgt = ITENTRY(i + 3); // правый операнд
-		bool w = false, r = false, c = false;
-		string wstr, rstr;
-
-		for (int j = i + 5; LEXEMA(j) != LEX_DIEZ; j++) // пропустили открывающую решетку
-		{
-			if (LEXEMA(j) == LEX_ISTRUE) r = true;
-			if (LEXEMA(j) == LEX_ISFALSE) w = true;
-			if (LEXEMA(j) == LEX_CYCLE) c = true;
-		}
-		str = str + "mov edx, " + lft.id + "\ncmp edx, " + rgt.id + "\n";
-		switch (LEXEMA(i + 2))
-		{
-		case LEX_MORE:  rstr = "jg";  wstr = "jl";  break;
-		case LEX_LESS:   rstr = "jl";  wstr = "jg";  break;
-		case LEX_EQUALS:    rstr = "jz";  wstr = "jnz";  break;
-		case LEX_NOTEQUALS:   rstr = "jnz";  wstr = "jz";  break;
-		}
-
-		if (!c && r) str = str + "\n" + rstr + " right" + itoS(conditionnum);
-		if (!c && w) str = str + "\n" + wstr + " wrong" + itoS(conditionnum);
-		if (c)
-		{
-			str = str + "\n" + rstr + " cycle" + itoS(conditionnum);
-			cyclecode = str;
-			str = str + "\njmp cyclenext" + itoS(conditionnum);
-		}
-		else if (!r || !w)  str = str + "\njmp next" + itoS(conditionnum);
-		return str;
+		short rc = -1;
+		short k = 0;
+		while (k < size && rules[k].nn != pnn)
+			++k;
+		if (k < size)
+			prule = rules[rc = k];
+		return rc;
 	}
-	vector <string> startFillVector(Lexer::LEX& tables)
+
+	Rule Greibach::getRule(short n)
 	{
-		vector <string> v;
-		v.push_back(BEGIN);
-		v.push_back(EXTERN);
+		Rule rc;
+		if (n < size)
+			rc = rules[n];
+		return rc;
+	};
 
-		vector <string> vlt;  vlt.push_back(CONST);
-		vector <string> vid;  vid.push_back(DATA);
-
-		for (int i = 0; i < tables.idtable.size; i++)// const, data
-		{
-			IT::Entry e = tables.idtable.table[i];
-			string str = "\t\t" + string(e.id);
-
-			if (tables.idtable.table[i].idtype == IT::IDTYPE::L)	// литерал - в .const
-			{
-				switch (e.iddatatype)
-				{
-				case IT::IDDATATYPE::NUM:  str = str + " sdword " + itoS(e.value.vint);  break;
-				case IT::IDDATATYPE::STR:  str = str + " byte '" + string(e.value.vstr.str) + "', 0";  break;
-				}
-				vlt.push_back(str);
-			}
-			else if (tables.idtable.table[i].idtype == IT::IDTYPE::V)// переменная - в .data
-			{
-				switch (e.iddatatype)
-				{
-				case IT::IDDATATYPE::NUM: str = str + " sdword 0";  break;
-				case IT::IDDATATYPE::STR: str = str + " dword ?";  break;
-				}
-				vid.push_back(str);
-			}
-		}
-		v.insert(v.end(), vlt.begin(), vlt.end());
-		v.insert(v.end(), vid.begin(), vid.end());
-		v.push_back(CODE);
-		return v;
-	}
-	void CodeGeneration(Lexer::LEX& tables, Parm::PARM& parm, Log::LOG& log)
+	char* Rule::getCRule(char* b, short nchain)
 	{
-		vector <string> v = startFillVector(tables);
-		ofstream ofile("D:\\KDV_2019\\Generation\\Generation\\Gen.asm");
-		string funcname;	// имя текущей функции
-		string cyclecode;	// эпилог цикла: cmp + j
-		int pcount;			// количество параметров текущей функции
-		string str;
+		char bchain[200];
+		b[0] = Chain::alphabet_to_char(nn);
+		b[1] = '-';
+		b[2] = '>';
+		b[3] = 0x00;
+		chains[nchain].getCChain(bchain);
+		strcat_s(b, sizeof(bchain) + 5, bchain);
+		return b;
+	};
 
-		for (int i = 0; i < tables.lextable.size; i++)
-		{
-			switch (LEXEMA(i))
-			{
-			case LEX_MAIN:
-			{
-				str = str + SEPSTR("MAIN") + "main PROC";
-				break;
-			}
-			case LEX_FUNCTION:
-			{
-				funcname = ITENTRY(i + 1).id;
-				pcount = ITENTRY(i + 1).value.params.count;
-				str = genFunctionCode(tables, i, funcname, pcount);
-				break;
-			}
-			case LEX_RETURN:
-			{
-				str = genExitCode(tables, i, funcname, pcount);
-				break;
-			}
-			case LEX_ID: // вызов функции
-			{
-				if (LEXEMA(i + 1) == LEX_LEFTHESIS && LEXEMA(i - 1) != LEX_FUNCTION) // не объявление, а вызов
-					str = genCallFuncCode(tables, log, i);
-				break;
-			}
-			case LEX_CONDITION: // условие
-			{
-				str = genConditionCode(tables, i, cyclecode);
-				break;
-			}
-			case LEX_BRACELET:	// переход на метку в конце кондишна
-			{
-				if (LEXEMA(i + 1) == LEX_ISFALSE || LEXEMA(i + 1) == LEX_ISTRUE)
-					str = str + "jmp next" + itoS(conditionnum);
-			}
-			case LEX_DIEZ:		// поставить метки в конце кондишна
-			{
-				if (LEXEMA(i - 1) == LEX_BRACELET) //   ]#
-				{
-					bool c = false;
-					for (int j = i; j > 0 && LEXEMA(j) != LEX_CONDITION; j--)
-						if (LEXEMA(j) == LEX_CYCLE)
-							c = true;
-					if (c)
-						str = cyclecode + "\ncyclenext" + itoS(conditionnum) + ":";
-					else  str += "next" + itoS(conditionnum) + ":";
-				}
-				break;
-			}
-			case LEX_ISTRUE: // условие верно(метка)
-			{
-				str = str + "right" + itoS(conditionnum) + ":";
-				break;
-			}
-			case LEX_ISFALSE: // условие неверно(метка)
-			{
-				str = str + "wrong" + itoS(conditionnum) + ":";
-				break;
-			}
-			case LEX_CYCLE: // цикл с условием (метка)
-			{
-				str = str + "cycle" + itoS(conditionnum) + ":";
-				break;
-			}
-			case LEX_EQUAL: // присваивание (вычисление выражений)
-			{
-				str = genEqualCode(tables, log, i);
-				while (LEXEMA(++i) != LEX_SEPARATOR);	// пропускаем выражение
-				break;
-			}
-			case LEX_NEWLINE: // перевод строки 
-			{
-				str = str + "push offset newline\ncall outstr\n";
-				break;
-			}
-			case LEX_WRITE: // вывод
-			{
-				IT::Entry e = ITENTRY(i + 1);
-				switch (e.iddatatype)
-				{
-				case IT::IDDATATYPE::NUM:
-					str = str + "\npush " + e.id + "\ncall outnum\n";
-					break;
-				case IT::IDDATATYPE::STR:
-					if (e.idtype == IT::IDTYPE::L)  str = str + "\npush offset " + e.id + "\ncall outstr\n";
-					else  str = str + "\npush " + e.id + "\ncall outstr\n";
-					break;
-				}
-				break;
-			}
-
-			}
-
-			if (!str.empty())
-				v.push_back(str);
-			str.clear();
-		}
-		v.push_back(END);
-		// вывод в файл
-		for (auto x : v)
-			ofile << x << endl;
-		ofile.close();
+	short Rule::getNextChain(GRBALPHABET t, Rule::Chain& pchain, short j)
+	{
+		short rc = -1;
+		while (j < size && chains[j].nt[0] != t)
+			++j;
+		rc = (j < size ? j : -1);
+		if (rc >= 0)
+			pchain = chains[rc];
+		return rc;
 	}
-};
+
+	char* Rule::Chain::getCChain(char* b)
+	{
+		for (int i = 0; i < size; ++i)
+			b[i] = alphabet_to_char(nt[i]);
+		b[size] = 0x00;
+		return b;
+	}
+
+}
