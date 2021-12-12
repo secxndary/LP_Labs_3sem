@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{7dbe4718-dc4b-4029-8429-5e498ec16cf4}</ProjectGuid>
-    <RootNamespace>LPasm01e</RootNamespace>
+    <ProjectGuid>{e2f142ed-62b7-4de7-baa7-f239e42e9b94}</ProjectGuid>
+    <RootNamespace>VAD2021</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -54,7 +54,6 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -93,7 +92,6 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalOptions>C:\Users\valda\source\repos\semester #3\LP_Labs\LP_Lab17\Debug\LP_asm01d.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,10 +139,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <MASM Include="LP_asm01e.asm" />
+    <ClCompile Include="FST.cpp" />
+    <ClCompile Include="Generator.cpp" />
+    <ClCompile Include="Greibach.cpp" />
+    <ClCompile Include="In.cpp" />
+    <ClCompile Include="IT.cpp" />
+    <ClCompile Include="LexAnalysis.cpp" />
+    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="LT.cpp" />
+    <ClCompile Include="MFST.cpp" />
+    <ClCompile Include="Parm.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="PolishNotation.cpp" />
+    <ClCompile Include="SemAnalysis.cpp" />
+    <ClCompile Include="VAD-2021.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Error.h" />
+    <ClInclude Include="FST.h" />
+    <ClInclude Include="Generator.h" />
+    <ClInclude Include="Graphs.h" />
+    <ClInclude Include="Greibach.h" />
+    <ClInclude Include="Header.h" />
+    <ClInclude Include="In.h" />
+    <ClInclude Include="IT.h" />
+    <ClInclude Include="LexAnalysis.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="LT.h" />
+    <ClInclude Include="MFST.h" />
+    <ClInclude Include="Parm.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="PolishNotation.h" />
+    <ClInclude Include="SemAnalysis.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

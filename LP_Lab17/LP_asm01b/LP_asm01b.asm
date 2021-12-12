@@ -28,7 +28,7 @@ str_endl byte endl,0
 consoleTitle byte "Console Title", 0
 arr		dword 12, 5, 100, 1, 2, 3, 12, 14, 9, 7  ; массив из 10 элементов размером 4 байта
 value   dword ?
-text   byte "getmax - getmin = "
+text   byte "getmin - getmax = "
 result byte 40 dup(0)
 	   byte 10
 

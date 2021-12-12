@@ -9,6 +9,6 @@ extern "C"
 int main()
 {
     int arr[] = { 12, 5, 100, 1, 2, 3, 12, 14, 9, 7 };
-    std::cout << "getmin - getmax = " << getmin(arr, 10) - getmax(arr, 10) << std::endl;
+    std::cout << "getmin - getmax = " << getmax(arr, 10) - getmin(arr, 10) << std::endl;
     return 0;
 }

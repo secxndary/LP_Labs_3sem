@@ -11,8 +11,8 @@ getmin PROC  uses  ebx ecx edi esi, array: dword, len: dword
 		mov ebx, [esi]
 		cmp ebx, eax
 
-		js c1
-		jns c0
+		js c0
+		jns c1
 
 		c1:
 			mov eax, [esi]
@@ -35,11 +35,11 @@ getmax PROC  uses  ebx ecx edi esi, array: dword, len: dword
 		mov ebx, [esi]
 		cmp ebx, eax
 
-		js c0
-		jns c1
+		js c1
+		jns c0
 
 		c1:
-			mov eax, [ esi]
+			mov eax, [esi]
 		c0:
 			add esi, 4
 
