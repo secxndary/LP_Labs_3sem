@@ -11,7 +11,7 @@ ExitProcess PROTO:DWORD
 
  outstr PROTO : DWORD
 
- concat PROTO : DWORD, : DWORD, : DWORD
+ strcopy PROTO : DWORD, : DWORD
 
  lenght PROTO : DWORD, : DWORD
 
@@ -19,38 +19,45 @@ ExitProcess PROTO:DWORD
 
 .const
 		newline byte 13, 10, 0
-		LTRL1 sdword 1
-		LTRL2 byte 'Lenght + 1: ', 0
-		LTRL3 byte 'String concat: ', 0
-		LTRL4 sdword 2
+		LTRL1 sdword 5
+		LTRL2 byte 'Lenght + 5:          ', 0
+		LTRL3 byte 'String copy:         ', 0
+		LTRL4 sdword 10
 		LTRL5 sdword 3
-		LTRL6 sdword 10
-		LTRL7 byte 'Just ', 0
-		LTRL8 byte 'string', 0
+		LTRL6 byte '10 module 3:         ', 0
+		LTRL7 byte 'VAD-2021', 0
+		LTRL8 byte 'Course Project Test', 0
 		LTRL9 byte '70', 0
-		LTRL10 byte 'from string in number: ', 0
-		LTRL11 sdword 7
-		LTRL12 byte 'Left shift: ', 0
-		LTRL13 sdword 100
-		LTRL14 byte ' ', 0
-		LTRL15 byte ' after cycle ', 0
+		LTRL10 byte 'Cycle:               ', 0
+		LTRL11 sdword 125
+		LTRL12 sdword 1
+		LTRL13 byte '; ', 0
+		LTRL14 byte 'Number after cycle:  ', 0
+		LTRL15 sdword 21
+		LTRL16 sdword 13
+		LTRL17 byte 'Minimal number:      ', 0
+		LTRL18 byte 'Number from string:  ', 0
+		LTRL19 sdword 2
+		LTRL20 sdword 6
+		LTRL21 byte 'Left shift 2 on 6:   ', 0
 .data
 		temp sdword ?
 		buffer byte 256 dup(0)
 		minres sdword 0
-		standk sdword 0
-		standstr dword ?
+		stringsk sdword 0
+		stringsstr dword ?
 		mainx sdword 0
 		mainy sdword 0
-		mainm sdword 0
-		mainn sdword 0
 		mainstrx dword ?
 		mainstry dword ?
 		mainstrz dword ?
-		maine sdword 0
-		mainresult sdword 0
-		maint sdword 0
 		mainab sdword 0
+		mainminone sdword 0
+		mainmintwo sdword 0
+		mainresmin sdword 0
+		mainsnum sdword 0
+		mainshiftnum sdword 0
+		mainshiftres sdword 0
 .code
 
 ;------------- min --------------
@@ -89,15 +96,15 @@ min ENDP
 ;--------------------------------
 
 
-;------------- stand --------------
-stand PROC,
-	standa : dword, standb : dword  
+;------------- strings --------------
+strings PROC,
+	stringsa : dword, stringsb : dword  
 ; -------- save registers -------
 push ebx
 push edx
 ; -------------------------------
 
-push standa
+push stringsa
 push offset buffer
 call lenght
 push eax
@@ -108,31 +115,30 @@ add eax, ebx
 push eax
 
 pop ebx
-mov standk, ebx
+mov stringsk, ebx
 
 
 push offset LTRL2
 call outstr
 
 
-push standk
+push stringsk
 call outnum
 
 push offset newline
 call outstr
 
 
-push standb
-push standa
+push stringsb
 push offset buffer
-call concat
-mov standstr, eax
+call strcopy
+mov stringsstr, eax
 
 push offset LTRL3
 call outstr
 
 
-push standstr
+push stringsstr
 call outstr
 
 push offset newline
@@ -143,7 +149,7 @@ pop edx
 pop ebx
 ; -------------------------------
 ret
-stand ENDP
+strings ENDP
 ;--------------------------------
 
 
@@ -172,35 +178,11 @@ pop ebx
 mov mainx, ebx
 
 
-push mainx
-call outnum
-
-push offset newline
+push offset LTRL6
 call outstr
 
-push LTRL6
 
-pop ebx
-mov mainm, ebx
-
-push LTRL5
-
-pop ebx
-mov mainn, ebx
-
-push mainm
-push mainn
-pop ebx
-pop eax
-cdq
-idiv ebx
-push eax
-
-pop ebx
-mov mainm, ebx
-
-
-push mainm
+push mainx
 call outnum
 
 push offset newline
@@ -210,7 +192,98 @@ mov mainstrx, offset LTRL7
 mov mainstry, offset LTRL8
 mov mainstrz, offset LTRL9
 
+push mainstry
+push mainstrx
+call strings
+
+
 push offset LTRL10
+call outstr
+
+push LTRL11
+
+pop ebx
+mov mainab, ebx
+
+mov edx, mainab
+cmp edx, LTRL12
+
+jg cycle2
+jmp cyclenext2
+cycle2:
+
+push mainab
+call outnum
+
+
+push offset LTRL13
+call outstr
+
+push mainab
+push LTRL5
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+
+pop ebx
+mov mainab, ebx
+
+mov edx, mainab
+cmp edx, LTRL12
+
+jg cycle2
+cyclenext2:
+push offset newline
+call outstr
+
+
+push offset LTRL14
+call outstr
+
+
+push mainab
+call outnum
+
+push offset newline
+call outstr
+
+push LTRL15
+
+pop ebx
+mov mainminone, ebx
+
+push LTRL16
+
+pop ebx
+mov mainmintwo, ebx
+
+
+push mainmintwo
+push mainminone
+call min
+push eax
+
+pop ebx
+mov mainresmin, ebx
+
+
+push offset LTRL17
+call outstr
+
+
+push mainresmin
+call outnum
+
+push offset newline
+call outstr
+
+push offset newline
+call outstr
+
+
+push offset LTRL18
 call outstr
 
 
@@ -220,17 +293,22 @@ call atoii
 push eax
 
 pop ebx
-mov maine, ebx
+mov mainsnum, ebx
 
 
-push maine
+push mainsnum
 call outnum
 
 push offset newline
 call outstr
 
+push LTRL19
+
+pop ebx
+mov mainshiftnum, ebx
+
 push mainx
-push LTRL11
+push LTRL20
 pop ebx 
 pop eax 
 mov cl, bl 
@@ -238,89 +316,18 @@ shl eax, cl
 push eax
 
 pop ebx
-mov mainresult, ebx
+mov mainshiftres, ebx
 
 
-push offset LTRL12
+push offset LTRL21
 call outstr
 
 
-push mainresult
+push mainshiftres
 call outnum
 
 push offset newline
 call outstr
-
-
-push mainy
-push mainx
-call min
-push eax
-
-pop ebx
-mov maint, ebx
-
-
-push maint
-call outnum
-
-push offset newline
-call outstr
-
-push LTRL5
-
-pop ebx
-mov mainab, ebx
-
-mov edx, mainab
-cmp edx, LTRL13
-
-jl cycle2
-jmp cyclenext2
-cycle2:
-
-push mainab
-call outnum
-
-
-push offset LTRL14
-call outstr
-
-push mainab
-push LTRL4
-pop ebx
-pop eax
-add eax, ebx
-push eax
-push LTRL4
-pop ebx
-pop eax
-imul eax, ebx
-push eax
-
-pop ebx
-mov mainab, ebx
-
-mov edx, mainab
-cmp edx, LTRL13
-
-jl cycle2
-cyclenext2:
-
-push offset LTRL15
-call outstr
-
-
-push mainab
-call outnum
-
-push offset newline
-call outstr
-
-
-push mainstry
-push mainstrx
-call stand
 
 push 0
 call ExitProcess

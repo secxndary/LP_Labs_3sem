@@ -26,34 +26,37 @@ extern "C"
 			n -= '0';
 		}
 		return n;
-
 	}
 
 
-	char* __stdcall concat(char* buffer, char* str1, char* str2)	// конкатенация строк
+	char* __stdcall strcopy(char* buffer, char* str)				// копирование строк
 	{
-		//int i = NULL, len1 = NULL, len2 = NULL;
-		//for (int j = 0; str1[j] != '\0'; j++)
-		//{
-		//	if (i == 255)
-		//		break;
-		//	buffer[i++] = str1[j];
-		//}
-		//for (int j = 0; str2[j] != '\0'; j++)
-		//{
-		//	if (i == 255)
-		//		break;
-		//	buffer[i++] = str2[j];
-		//}
-		//buffer[i] = '\0';
-		//return buffer;
+		int i = NULL, len1 = NULL, len2 = NULL;
+		for (int j = 0; str[j] != '\0'; j++)
+		{
+			if (i == 255)
+				break;
+			buffer[i++] = str[j];
+		}
+		buffer[i] = '\0';
+		return buffer;
+	}
 
+
+	char* __stdcall strconcat(char* buffer, char* str1, char* str2)	// конкатенация строк
+	{
 		int i = NULL, len1 = NULL, len2 = NULL;
 		for (int j = 0; str1[j] != '\0'; j++)
 		{
 			if (i == 255)
 				break;
 			buffer[i++] = str1[j];
+		}
+		for (int j = 0; str2[j] != '\0'; j++)
+		{
+			if (i == 255)
+				break;
+			buffer[i++] = str2[j];
 		}
 		buffer[i] = '\0';
 		return buffer;
