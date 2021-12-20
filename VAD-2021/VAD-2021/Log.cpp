@@ -30,7 +30,7 @@ namespace Log
 		tm* timeinfo = localtime(&seconds);
 		const char* format = "%d.%m.%Y %H:%M:%S";
 		strftime(buffer, 80, format, timeinfo);
-		*log.stream << "\n-----------------  Протокол работы  -----------------\n------------  Дата: " << buffer << "  ------------\n\n";
+		*log.stream << "\n================================  Протокол работы  ================================\n===========================  Дата: " << buffer << "  ===========================\n\n";
 	}
 
 	void writeLine(std::ostream* stream, char* c, ...)		// вывести в протокол конкатенацию строк
@@ -45,7 +45,7 @@ namespace Log
 			size_t slen = strlen(*ptr);
 			result = (char*)realloc(result, size + slen);
 			result[size] = '\0';
-			size += slen;	// size - ПОЛНЫЙ размер буфера
+			size += slen;	// size - полный размер буфера
 			strcat_s(result, size + 1, *ptr);
 			ptr++;
 		}
@@ -60,7 +60,7 @@ namespace Log
 		wcstombs(inTxt, parm.in, wcslen(parm.in) + 1);
 		wcstombs(outTxt, parm.out, wcslen(parm.out) + 1);
 		wcstombs(logTxt, parm.log, wcslen(parm.log) + 1);
-		*log.stream << "\n-------  Параметры  -------";
+		*log.stream << "\n================  Параметры  ================";
 		*log.stream << "\n-in: " << inTxt
 			<< "\n-out: " << outTxt
 			<< "\n-log: " << logTxt;
@@ -68,7 +68,7 @@ namespace Log
 
 	void writeIn(std::ostream* stream, In::IN& in)
 	{
-		*stream << "\n----  Исходные данные  ----";
+		*stream << "\n=============  Исходные данные  =============";
 		*stream << "\nКоличество символов: " << std::setw(3) << in.size
 			<< "\nПроигнорировано: " << std::setw(3) << in.ignor
 			<< "\nКоличество строк: " << std::setw(3) << in.lines << "\n\n";
@@ -106,10 +106,10 @@ namespace Log
 
 	void writeWords(std::ostream* stream, In::InWord* words)
 	{
-		*stream << " ------------------ ТАБЛИЦА СЛОВ: ------------------" << std::endl;
+		*stream << " ===================  ТАБЛИЦА СЛОВ  ===================" << std::endl;
 		for (int i = 0; i < words->size; i++)
 			*stream << std::setw(2) << i << std::setw(3) << words[i].line << " |  " << words[i].word << std::endl;
-		*stream << "\n-------------------------------------------------------------------------\n\n";
+		*stream << "\n=============================================================================\n\n";
 	}
 
 	void Close(LOG& log)

@@ -142,7 +142,7 @@ namespace In
 
 	void printTable(InWord* table)			// вывод таблицы в консоль
 	{
-		std::cout << " ------------------ “јЅЋ»÷ј —Ћќ¬: ------------------" << std::endl;
+		std::cout << "=====================  “јЅЋ»÷ј —Ћќ¬  =====================" << std::endl;
 		for (int i = 0; i < table->size; i++)
 			std::cout << std::setw(2) << i << std::setw(3) << table[i].line << " |  " << table[i].word << std::endl;
 	}

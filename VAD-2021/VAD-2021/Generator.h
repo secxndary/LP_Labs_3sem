@@ -5,7 +5,7 @@
 #include "LexAnalysis.h"
 
 
-#define SEPSTREMP  "\n;--------------------------------\n"
+#define SEPSTREMP  "\n;---------------\n"
 #define SEPSTR(x)  "\n;------------- " + string(x) + " --------------\n"
 
 
@@ -21,7 +21,7 @@
 
 #define EXTERN "\n outnum PROTO : DWORD\n"\
 "\n outstr PROTO : DWORD\n"\
-"\n concat PROTO : DWORD, : DWORD, : DWORD\n"\
+"\n strcopy PROTO : DWORD, : DWORD\n"\
 "\n lenght PROTO : DWORD, : DWORD\n"\
 "\n atoii  PROTO : DWORD,  : DWORD\n"
 

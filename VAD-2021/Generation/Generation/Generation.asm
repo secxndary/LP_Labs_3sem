@@ -93,7 +93,7 @@ pop ebx
 mov eax, minres
 ret
 min ENDP
-;--------------------------------
+;---------------
 
 
 ;------------- strings --------------
@@ -150,7 +150,7 @@ pop ebx
 ; -------------------------------
 ret
 strings ENDP
-;--------------------------------
+;---------------
 
 
 ;------------- MAIN --------------
@@ -275,9 +275,6 @@ call outstr
 
 push mainresmin
 call outnum
-
-push offset newline
-call outstr
 
 push offset newline
 call outstr

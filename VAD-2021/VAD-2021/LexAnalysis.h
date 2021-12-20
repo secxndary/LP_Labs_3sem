@@ -7,8 +7,8 @@
 // проверка входных токенов
 #define TYPE_NUMBER		"number"
 #define TYPE_STRING		"string"
-#define TYPE_PROCEDURE	"procedure"
-#define CONCAT			"concat"
+#define TYPE_SCRIPT		"script"
+#define STRCOPY			"strcopy"
 #define ATOII			"atoii"
 #define MAIN			"main"
 #define LENGHT			"lenght"

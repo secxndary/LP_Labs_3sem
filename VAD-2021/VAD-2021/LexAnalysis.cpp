@@ -5,13 +5,14 @@
 #include<string>
 
 
-int DecimicalNotation(std::string input, int scaleofnot)	// токен 16-ного токена в 10-ное число
+int DecimicalNotation(std::string input, int scaleofnot)	// перевод 16-ного токена в 10-ное число
 {
 	std::string num = input.substr(1, input.size());
 	const char* c = num.c_str();
 	int res = strtol(c, NULL, 16);
 	return res;
 }
+
 
 namespace Lexer
 {
@@ -26,7 +27,7 @@ namespace Lexer
 		{ LEX_ID_TYPE, FST::FST(GRAPH_NUMBER) },
 		{ LEX_ID_TYPE, FST::FST(GRAPH_STRING) },
 		{ LEX_FUNCTION, FST::FST(GRAPH_FUNCTION) },
-		{ LEX_PROCEDURE, FST::FST(GRAPH_PROCEDURE) },
+		{ LEX_SCRIPT, FST::FST(GRAPH_SCRIPT) },
 		{ LEX_RETURN, FST::FST(GRAPH_RETURN) },
 		{ LEX_WRITE, FST::FST(GRAPH_WRITE) },
 		{ LEX_NEWLINE, FST::FST(GRAPH_NEWLINE) },
@@ -82,8 +83,8 @@ namespace Lexer
 
 	IT::IDDATATYPE getType(char* curword, char* idtype)		// какой тип токена
 	{
-		if (!strcmp(TYPE_PROCEDURE, idtype))
-			return IT::IDDATATYPE::PROC; // процедуры
+		if (!strcmp(TYPE_SCRIPT, idtype))
+			return IT::IDDATATYPE::PROC; // скрипты
 		if (!strcmp(TYPE_STRING, idtype))
 			return IT::IDDATATYPE::STR;  // строковый идентификатор
 		if (!strcmp(TYPE_NUMBER, idtype))
@@ -115,8 +116,8 @@ namespace Lexer
 
 	IT::STDFNC getStandFunction(char* id)
 	{
-		if (!strcmp(CONCAT, id))
-			return IT::STDFNC::F_CONCAT;
+		if (!strcmp(STRCOPY, id))
+			return IT::STDFNC::F_STRCOPY;
 		if (!strcmp(LENGHT, id))
 			return IT::STDFNC::F_LENGHT;
 		if (!strcmp(ATOII, id))
@@ -191,14 +192,14 @@ namespace Lexer
 			{
 				switch (getStandFunction(id))
 				{
-				case IT::STDFNC::F_CONCAT:
+				case IT::STDFNC::F_STRCOPY:
 				{
 					itentry->idtype = IT::IDTYPE::S;
-					itentry->iddatatype = CONCAT_TYPE;
-					itentry->value.params.count = CONCAT_PARAMS_CNT;
-					itentry->value.params.types = new IT::IDDATATYPE[CONCAT_PARAMS_CNT];
-					for (int k = 0; k < CONCAT_PARAMS_CNT; k++)
-						itentry->value.params.types[k] = IT::CONCAT_PARAMS[k];
+					itentry->iddatatype = STRCOPY_TYPE;
+					itentry->value.params.count = STRCOPY_PARAMS_CNT;
+					itentry->value.params.types = new IT::IDDATATYPE[STRCOPY_PARAMS_CNT];
+					for (int k = 0; k < STRCOPY_PARAMS_CNT; k++)
+						itentry->value.params.types[k] = IT::STRCOPY_PARAMS[k];
 					break;
 				}
 				case IT::STDFNC::F_LENGHT:
@@ -325,7 +326,7 @@ namespace Lexer
 						}
 						case LEX_BRACELET:		// конец области видимости
 						{
-							if (*in.words[i + 1].word == LEX_ID_TYPE || *in.words[i + 1].word == LEX_PROCEDURE || *in.words[i + 1].word == LEX_MAIN)
+							if (*in.words[i + 1].word == LEX_ID_TYPE || *in.words[i + 1].word == LEX_SCRIPT || *in.words[i + 1].word == LEX_MAIN)
 								if (!scopes.empty())
 									scopes.pop();
 							break;
@@ -384,7 +385,7 @@ namespace Lexer
 							if (i > 0 && tables.lextable.table[i - 1].lexema == LEX_NEW || tables.lextable.table[i].lexema == LEX_NEW
 								|| tables.lextable.table[i - 1].lexema == LEX_FUNCTION || tables.lextable.table[i].lexema == LEX_FUNCTION
 								|| tables.lextable.table[i - 1].lexema == LEX_ID_TYPE || tables.lextable.table[i].lexema == LEX_ID_TYPE
-								|| tables.lextable.table[i - 1].lexema == LEX_PROCEDURE || tables.lextable.table[i].lexema == LEX_PROCEDURE
+								|| tables.lextable.table[i - 1].lexema == LEX_SCRIPT || tables.lextable.table[i].lexema == LEX_SCRIPT
 								|| tables.lextable.table[i - 1].lexema == LEX_LITERAL_NUMO)
 							{
 								Log::writeError(log.stream, Error::GetError(305, curline, 0));

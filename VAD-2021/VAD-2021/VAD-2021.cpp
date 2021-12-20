@@ -15,18 +15,15 @@ int _tmain(int argc, _TCHAR* argv[])
 		Log::writeLog(log);														// написать заголовок протокола
 		Log::writeParm(log, parm);												// записать в протокол параметры
 		In::IN in = In::getin(parm.in, log.stream);								// считать входной файл
-		Log::writeIn(log.stream, in);
+		Log::writeIn(log.stream, in);											// записать информацию о входном файле
 
 
 		in.words = In::getWordsTable(log.stream, in.text, in.code, in.size);	// разобрать на токены
 		Lexer::LEX tables;														// создать таблицу лексем
 		bool lex_ok = Lexer::analyze(tables, in, log, parm);					// выполнить лексический анализ
-		LT::writeLexTable(log.stream, tables.lextable);							// записать в протокол таблицы лексем и идентификаторов 
-		IT::writeIdTable(log.stream, tables.idtable);							// а также соответствие токенов и лексем
-		LT::writeLexemsOnLines(log.stream, tables.lextable);					// записать построчно лексемы
-		LT::writeLexTable(log.stream, tables.lextable);							// записать в протокол таблицы лексем и идентификаторов 
-		IT::writeIdTable(log.stream, tables.idtable);							// а также соответствие токенов и лексем
-		LT::writeLexemsOnLines(log.stream, tables.lextable);					// записать построчно лексемы
+		LT::writeLexTable(log.stream, tables.lextable);							// записать в протокол таблицу лексем
+		IT::writeIdTable(log.stream, tables.idtable);							// и таблицу идентификаторов
+		LT::writeLexemsOnLines(log.stream, tables.lextable);					// и соответствие лексем исходному коду
 		if (!lex_ok)										
 		{
 			Log::writeLine(log.stream, LEXERROR, "");
@@ -63,7 +60,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			Log::writeLine(&std::cout, SEMGOOD, "");							// успешная запись в протокол
 
 
-		bool polish_ok = Polish::PolishNotation(tables, log);					// выполнить преобразование выражений в польской записи
+		bool polish_ok = Polish::PolishNotation(tables, log);					// выполнить преобразование выражений в ПОЛИЗ
 		if (!polish_ok)										
 		{
 			Log::writeLine(log.stream, POLISHERROR, "");
@@ -73,19 +70,16 @@ int _tmain(int argc, _TCHAR* argv[])
 		else Log::writeLine(&std::cout, POLISHGOOD, "");						// успешная запись в протокол
 
 
-		Log::writeLine(log.stream, MESSAGE, "");
-		LT::writeLexTable(log.stream, tables.lextable);							// записать в протокол новые таблицы лексем
-		IT::writeIdTable(log.stream, tables.idtable);							// и идентификаторов в польской записи
-		LT::writeLexemsOnLines(log.stream, tables.lextable);					// а также соответствие токенов и лексем
-		Log::writeLine(&std::cout, MESSAGE, "");								// в протокол и в консось
-		IT::writeIdTable(&std::cout, tables.idtable);							// записать в командную строку новые таблицы лексем и идентификаторов 
-		LT::writeLexTable(&std::cout, tables.lextable);							// а также соответствие токенов и лексем
-		LT::writeLexemsOnLines(&std::cout, tables.lextable);					// в протокол и в консоль
+		LT::writeLexemsOnLines(log.stream, tables.lextable);					// записать соответствие лексем исходному коду
+		Log::writeLine(&std::cout, MESSAGE, "");								// вывести в консоль работу протокола
+		IT::writeIdTable(&std::cout, tables.idtable);							// вывести в консоль таблицу идентификаторов
+		LT::writeLexTable(&std::cout, tables.lextable);							// вывести в консоль таблицу лексем
+		LT::writeLexemsOnLines(&std::cout, tables.lextable);					// вывести в консоль соответствие лексем и токенов
 
 
 		Gener::CodeGeneration(tables, parm, log);								// выполнить генерацию кода
 		Log::writeLine(log.stream, ALLGOOD, "");								// итог работы программы
-		Log::writeLine(&std::cout, ALLGOOD, "");								// в протокол и в консоль
+		Log::writeLine(&std::cout, ALLGOOD, "");								// в протокол и в консось
 		Log::Close(log);													    // закрыть протокол
 
 	}

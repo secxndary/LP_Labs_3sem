@@ -11,10 +11,10 @@
 #define NUM_MAXSIZE 255						// максимальное значение для типа number
 #define NUM_MINSIZE -256					// минимальное значение для типа number
 #define MAX_PARAMS_COUNT 3					// максимальное количество параметров у функции
-#define CONCAT_PARAMS_CNT 2					// кол-во параметров у функции concat
+#define STRCOPY_PARAMS_CNT 1				// кол-во параметров у функции strcopy
 #define LENGHT_PARAMS_CNT 1					// кол-во параметров у функции lenght
 #define ATOII_PARAMS_CNT 1					// кол-во параметров у функции atoii
-#define CONCAT_TYPE IT::IDDATATYPE::STR
+#define STRCOPY_TYPE IT::IDDATATYPE::STR
 #define LENGHT_TYPE IT::IDDATATYPE::NUM
 #define ATOII_TYPE IT::IDDATATYPE::NUM
 
@@ -23,8 +23,8 @@ namespace IT
 {
 	enum IDDATATYPE { NUM = 1, STR = 2, PROC = 3, UNDEF };	// типы данных идентификаторов: числовой, строковый, без типа, неопределенный
 	enum IDTYPE { V = 1, F = 2, P = 3, L = 4, S = 5 };		// типы идентификаторов: переменная, функция, параметр, литерал, стандартная функция
-	enum STDFNC { F_CONCAT, F_LENGHT, F_ATOII, F_NOT_STD };	// стандартные функции
-	static const IDDATATYPE CONCAT_PARAMS[] = { IT::IDDATATYPE::STR, IT::IDDATATYPE::STR };	// параметры функции  concatstr
+	enum STDFNC { F_STRCOPY, F_LENGHT, F_ATOII, F_NOT_STD };	// стандартные функции
+	static const IDDATATYPE STRCOPY_PARAMS[] = { IT::IDDATATYPE::STR};	// параметры функции strcopy
 	static const IDDATATYPE LENGHT_PARAMS[] = { IT::IDDATATYPE::STR };	// параметры функции strlen
 	static const IDDATATYPE ATOII_PARAMS[] = { IT::IDDATATYPE::STR };	// параметры ф-ции atoi
 

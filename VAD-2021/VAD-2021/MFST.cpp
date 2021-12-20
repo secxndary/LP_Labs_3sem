@@ -157,13 +157,13 @@ namespace MFST
 		switch (rc_step)
 		{			// вывод в файл
 		case LENTA_END:         MFST_TRACE4(log, "------>LENTA_END")
-			* log.stream << "-------------------------------------------------------------------------------------" << std::endl;
-			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d:всего строк %d, синтаксический анализ выполнен без ошибок ", 0, lenta_size);
-			*log.stream << std::setw(4) << std::left << 0 << ":всего строк " << lenta_size << ", синтаксический анализ выполнен без ошибок " << std::endl;
+			* log.stream << "===================================================================================" << std::endl;
+			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: всего строк %d, синтаксический анализ выполнен без ошибок ", 0, lenta_size);
+			*log.stream << std::setw(4) << std::left << 0 << ": всего строк " << lenta_size << ", синтаксический анализ выполнен без ошибок " << std::endl;
 			rc = true;
 			break;
 		case NS_NORULE:         MFST_TRACE4(log, "------>NS_NORULE")
-			* log.stream << "-------------------------------------------------------------------------------------" << std::endl;
+			* log.stream << "===================================================================================" << std::endl;
 			*log.stream << getDiagnosis(0, buf) << std::endl;
 			*log.stream << getDiagnosis(1, buf) << std::endl;
 			*log.stream << getDiagnosis(2, buf) << std::endl;

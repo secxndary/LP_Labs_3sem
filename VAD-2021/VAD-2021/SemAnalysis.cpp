@@ -110,7 +110,7 @@ namespace Semantic
 
 				if (i > 0 && tables.lextable.table[i - 1].lexema == LEX_FUNCTION)
 				{
-					if (e.idtype == IT::IDTYPE::F)	//функция, не процедура
+					if (e.idtype == IT::IDTYPE::F)	//функция, не скрипт
 					{
 						for (int k = i + 1; ; k++)
 						{

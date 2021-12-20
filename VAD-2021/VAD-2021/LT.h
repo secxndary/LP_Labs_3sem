@@ -30,8 +30,8 @@
 #define LEX_CYCLE		 'c'	// цикл
 #define LEX_WRITE		 'o'	// вывод
 #define LEX_NEWLINE		 '^'	// перевод строки
-#define LEX_RETURN		 'e'	// выход из процедуры/функции
-#define LEX_PROCEDURE	 'p'	// ключевое слово процедуры
+#define LEX_RETURN		 'e'	// выход из скрипта/функции
+#define LEX_SCRIPT		 'p'	// ключевое слово дл€ скрипта
 #define LEX_NEW			 'n'	// объ€влени€ переменных
 #define LEX_MORE		 '>'	// проверка на больше
 #define LEX_LESS		 '<'	// проверка на меньше

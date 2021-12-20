@@ -19,7 +19,7 @@ namespace GRB	// грамматика Грейбах
 			Rule::Chain(6, TS('['), NS('K'), TS('e'), NS('V'), TS(';'), TS(']'))
 		),
 
-		Rule(NS('G'), GRB_ERROR_SERIES + 3, 2,					// Ошибка в теле процедуры
+		Rule(NS('G'), GRB_ERROR_SERIES + 3, 2,					// Ошибка в теле скрипта
 			Rule::Chain(4, TS('['), TS('e'), TS(';'), TS(']')),
 			Rule::Chain(5, TS('['), NS('K'), TS('e'), TS(';'), TS(']'))
 		),
