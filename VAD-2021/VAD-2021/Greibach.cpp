@@ -4,7 +4,7 @@
 
 typedef short GRBALPHABET;
 
-namespace GRB
+namespace GRB	// грамматика Грейбах
 {
 	Greibach greibach(NS('S'), TS('$'), 16,
 
@@ -131,15 +131,15 @@ namespace GRB
 	);
 
 
-	Rule::Chain::Chain(short psize, GRBALPHABET s, ...)
+	Rule::Chain::Chain(short psize, GRBALPHABET s, ...)	// цепочка
 	{
 		nt = new GRBALPHABET[size = psize];
 		int* p = (int*)&s;
-		for (short i = 0; i < psize; ++i)
+		for (short i = 0; i < psize; ++i)	// разбор цепочки
 			nt[i] = (GRBALPHABET)p[i];
 	};
 
-	Rule::Rule(GRBALPHABET pnn, int piderror, short psize, Chain c, ...)
+	Rule::Rule(GRBALPHABET pnn, int piderror, short psize, Chain c, ...)	// правило
 	{
 		nn = pnn;
 		iderror = piderror;
@@ -148,7 +148,6 @@ namespace GRB
 		for (int i = 0; i < size; ++i)
 			chains[i] = p[i];
 	};
-
 
 	Greibach::Greibach(GRBALPHABET pstartN, GRBALPHABET pstbottom, short psize, Rule r, ...)
 	{
@@ -165,7 +164,7 @@ namespace GRB
 		return greibach;
 	}
 
-	short Greibach::getRule(GRBALPHABET pnn, Rule& prule)
+	short Greibach::getRule(GRBALPHABET pnn, Rule& prule)	// получение правил
 	{
 		short rc = -1;
 		short k = 0;
@@ -196,7 +195,7 @@ namespace GRB
 		return b;
 	};
 
-	short Rule::getNextChain(GRBALPHABET t, Rule::Chain& pchain, short j)
+	short Rule::getNextChain(GRBALPHABET t, Rule::Chain& pchain, short j)	// получение цепочки
 	{
 		short rc = -1;
 		while (j < size && chains[j].nt[0] != t)

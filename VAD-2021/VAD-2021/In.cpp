@@ -39,7 +39,7 @@ namespace In
 				Log::writeError(stream, Error::GetError(200, in.lines, pos));
 				in.ignor++;
 				break;
-			case IN::I:// игнорируемый символ 
+			case IN::I:	// игнорируемый символ 
 				in.ignor++;
 				break;
 			default:
@@ -52,7 +52,7 @@ namespace In
 		instream.close(); // закрыть поток 
 		return in;
 	}
-	void addWord(InWord* words, char* word, int line)					// добавить слово в таблицу
+	void addWord(InWord* words, char* word, int line)		// добавить слово в таблицу
 	{
 		if (*word == IN_CODE_NULL)
 			return;
@@ -60,13 +60,13 @@ namespace In
 		strcpy_s(words[InWord::size].word, strlen(word) + 1, word);
 		InWord::size++;
 	}
-	InWord* getWordsTable(std::ostream* stream, unsigned char* text, int* code, int textSize)				// формируем таблицу слов
+	InWord* getWordsTable(std::ostream* stream, unsigned char* text, int* code, int textSize)		// формируем таблицу слов
 	{
 		InWord* words = new InWord[MAXSIZE_LT];
 		int bufpos = 0;				// позиция в буфере
 		int line = 1;				// номер строки исходного кода
 		char buffer[MAX_LEN_BUFFER] = "";		// буфер
-		for (int i = 0; i < textSize; i++)			// заполнение
+		for (int i = 0; i < textSize; i++)		// заполнение
 		{
 			switch (code[text[i]])
 			{
@@ -85,8 +85,8 @@ namespace In
 				bufpos = 0;
 				break;
 			}
-			case IN::N:											//новая строка
-			case IN::P:											// разделители и пробелы
+			case IN::N:									//новая строка
+			case IN::P:									// разделители и пробелы
 				addWord(words, buffer, line);
 				*buffer = IN_CODE_NULL;
 				bufpos = 0;
@@ -99,13 +99,13 @@ namespace In
 				*buffer = IN_CODE_NULL;
 				bufpos = 0;
 				bool isltrlgood = true;
-				// если литерал не закрыт - перевод строки будет раньше кавычки
-				for (int j = i + 1; text[j] != IN_CODE_QUOTE; j++)
+				
+				for (int j = i + 1; text[j] != IN_CODE_QUOTE; j++)		// если литерал не закрыт - перевод строки будет раньше кавычки
 				{
 					if (code[text[j]] == IN::N)
 					{
 						Log::writeError(stream, Error::GetError(311, line, 0));
-						isltrlgood = false; // литерал не закрыт!
+						isltrlgood = false;		// литерал не закрыт!
 						break;
 					}
 				}
@@ -116,11 +116,11 @@ namespace In
 					{
 						if (j == 256 || i + j == textSize)
 						{
-							Log::writeError(stream, Error::GetError(312, line, 0));
-							break; // превышен размер литерала(учтена откр кавычка)
+							Log::writeError(stream, Error::GetError(312, line, 0));		// превышен размер литерала(учтена открывающая кавычка)
+							break;	
 						}
 						buffer[bufpos++] = text[i + j];
-						if (text[i + j] == IN_CODE_QUOTE) // закрывающая кавычка
+						if (text[i + j] == IN_CODE_QUOTE)	// закрывающая кавычка
 						{
 							buffer[bufpos] = IN_CODE_NULL;
 							addWord(words, buffer, line);
@@ -128,7 +128,7 @@ namespace In
 							break;
 						}
 					}
-				} // literal good
+				}
 				*buffer = IN_CODE_NULL;  bufpos = 0;
 				break;
 			}
@@ -140,7 +140,7 @@ namespace In
 		return words;
 	}
 
-	void printTable(InWord* table)								// вывод таблицы на экран
+	void printTable(InWord* table)			// вывод таблицы в консоль
 	{
 		std::cout << " ------------------ ТАБЛИЦА СЛОВ: ------------------" << std::endl;
 		for (int i = 0; i < table->size; i++)

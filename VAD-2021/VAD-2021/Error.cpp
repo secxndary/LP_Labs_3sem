@@ -3,6 +3,7 @@
 
 namespace Error
 {
+	// таблица идентификаторов ошибок
 	ERROR errors[ERROR_MAX_ENTRY] =
 	{
 		ERROR_ENTRY(0, "Системная ошибка: Недопустимый код ошибки"),
@@ -70,7 +71,8 @@ namespace Error
 		ERROR_ENTRY_NODEF100(700), ERROR_ENTRY_NODEF100(800), ERROR_ENTRY_NODEF100(900)
 	};
 
-	ERROR GetError(int id)
+
+	ERROR GetError(int id)	// получить ошибку (только индекс)
 	{
 		if (id < 0 || id > ERROR_MAX_ENTRY)
 			return errors[0];
@@ -78,7 +80,7 @@ namespace Error
 			return errors[id];
 	}
 
-	ERROR GetError(int id, int line, int col)
+	ERROR GetError(int id, int line, int col)	// получить ошибку (индекс, строка и позиция символа ошибки)
 	{
 		ERROR err = GetError(id);
 		err.position.col = col;

@@ -4,6 +4,7 @@
 #include <ctime>
 #include <fstream>
 
+// отрисовка границ таблицы лога в файле
 #define W(x, y)  << std::setw(x) << (y) <<
 #define STR(n, line, type, id)\
 	"|" W(4,n) " |  " W(5,line) "    |" W(17,type) " |  " W(SCOPED_ID_MAXSIZE, id) " |"
@@ -17,7 +18,7 @@ namespace Log
 		stream.stream = new std::ofstream;
 		stream.stream->open(logfile);
 		if (!stream.stream->is_open())
-			throw ERROR_THROW(103); // ошибка при создании файла протокола
+			throw ERROR_THROW(103);		// ошибка при создании файла протокола
 		wcscpy_s(stream.logfile, logfile);
 		return stream;
 	}
@@ -29,7 +30,7 @@ namespace Log
 		tm* timeinfo = localtime(&seconds);
 		const char* format = "%d.%m.%Y %H:%M:%S";
 		strftime(buffer, 80, format, timeinfo);
-		*log.stream << "\n----------- Протокол ------------ Дата: " << buffer << " ------------ \n\n";
+		*log.stream << "\n-----------------  Протокол работы  -----------------\n------------  Дата: " << buffer << "  ------------\n\n";
 	}
 
 	void writeLine(std::ostream* stream, char* c, ...)		// вывести в протокол конкатенацию строк
@@ -44,7 +45,7 @@ namespace Log
 			size_t slen = strlen(*ptr);
 			result = (char*)realloc(result, size + slen);
 			result[size] = '\0';
-			size += slen; // size - ПОЛНЫЙ размер буфера
+			size += slen;	// size - ПОЛНЫЙ размер буфера
 			strcat_s(result, size + 1, *ptr);
 			ptr++;
 		}
@@ -59,24 +60,21 @@ namespace Log
 		wcstombs(inTxt, parm.in, wcslen(parm.in) + 1);
 		wcstombs(outTxt, parm.out, wcslen(parm.out) + 1);
 		wcstombs(logTxt, parm.log, wcslen(parm.log) + 1);
-		*log.stream << "\n----- Параметры --------";
+		*log.stream << "\n-------  Параметры  -------";
 		*log.stream << "\n-in: " << inTxt
 			<< "\n-out: " << outTxt
 			<< "\n-log: " << logTxt;
-		//<< "\nДополнительные ключи:\n" <<
-		//(parm.f_LEX ? "-l  " : "") << (parm.f_ID ? "-i  " : "")
-		//<< (parm.f_RULES ? "-r  " : "") << (parm.f_COUT ? "-c  " : "") << "\n\n";
 	}
 
 	void writeIn(std::ostream* stream, In::IN& in)
 	{
-		*stream << "\n---- Исходные данные ------";
+		*stream << "\n----  Исходные данные  ----";
 		*stream << "\nКоличество символов: " << std::setw(3) << in.size
 			<< "\nПроигнорировано: " << std::setw(3) << in.ignor
 			<< "\nКоличество строк: " << std::setw(3) << in.lines << "\n\n";
 	}
 
-	void writeError(std::ostream* stream, Error::ERROR e)
+	void writeError(std::ostream* stream, Error::ERROR e)	// вывод ошибок в логи
 	{
 		if (stream == NULL)
 		{

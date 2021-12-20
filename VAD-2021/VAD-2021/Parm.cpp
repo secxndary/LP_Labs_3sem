@@ -11,11 +11,10 @@ namespace Parm
 
 		for (int i = 1; i < argc; i++)
 		{
-			// превышена длина входного параметра
-			if (wcslen(argv[i]) > PARM_MAX_SIZE)   throw ERROR_THROW(101)
+			if (wcslen(argv[i]) > PARM_MAX_SIZE)   throw ERROR_THROW(101)		// превышена длина входного параметра
 			else
 			{
-				if (wcsncmp(argv[i], PARM_IN, wcslen(PARM_IN)) == 0)
+				if (wcsncmp(argv[i], PARM_IN, wcslen(PARM_IN)) == 0)			// копирование параметров cmd
 					wcscpy_s(parm.in, argv[i] + wcslen(PARM_IN));
 				else if (wcsncmp(argv[i], PARM_OUT, wcslen(PARM_OUT)) == 0)
 					wcscpy_s(parm.out, argv[i] + wcslen(PARM_OUT));
@@ -24,8 +23,8 @@ namespace Parm
 			}
 		}
 
-		if (*parm.in == NULL)
-			throw ERROR_THROW(100); // параметр должен быть задан
+		if (*parm.in == NULL)			// ошибки типа "параметр должен быть задан"
+			throw ERROR_THROW(100);		
 
 		if (*parm.out == NULL)
 		{

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Header.h"
 #include <iomanip>
+
+// отрисовка в консоли границ таблицы
 #define W(x, y)\
 		<< std::setw(x) << (y) <<
 #define STR(n, line, type, id)\
@@ -26,14 +28,11 @@ namespace IT
 		idtable.table[idtable.size++] = entry;
 	}
 
-	// возврат: номер строки(если есть), TI_NULLIDX(если нет)
-	int isId(IdTable& idtable, char id[SCOPED_ID_MAXSIZE])
+	int isId(IdTable& idtable, char id[SCOPED_ID_MAXSIZE])		// возвращает номер строки(если есть), TI_NULLIDX(если нет)
 	{
 		for (int i = 0; i < idtable.size; i++)
-		{
 			if (strcmp(idtable.table[i].id, id) == 0)
 				return i;
-		}
 		return NULLIDX_TI;
 	}
 
@@ -58,6 +57,7 @@ namespace IT
 			}
 			entry->value.vint = temp;
 		}
+
 		else
 		{
 			for (unsigned i = 1; i < strlen(value) - 1; i++)	// без кавычек
@@ -65,8 +65,10 @@ namespace IT
 			entry->value.vstr.str[strlen(value) - 2] = '\0';
 			entry->value.vstr.len = strlen(value) - 2;
 		}
+
 		return rc;
 	}
+
 	void writeIdTable(std::ostream* stream, IT::IdTable& idtable)
 	{
 		*stream << "---------------------------  “јЅЋ»÷ј »ƒ≈Ќ“»‘» ј“ќ–ќ¬  -------------------------\n" << std::endl;

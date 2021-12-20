@@ -8,13 +8,7 @@
 #define IN_CODE_QUOTE '\"'
 #include <fstream>
 
-// 28 29  ( )
-// 3c 3e  < >
-// 5b 5d  [ ]
-// 7b 7d  { }
-// 22 "
 
-// одинарные кавычки запрещены
 #define IN_CODE_TABLE	{\
 		IN::F, IN::F, IN::F, IN::F,  IN::F, IN::F, IN::F, IN::F,   IN::F, IN::P, IN::N, IN::F,  IN::F, IN::F, IN::F, IN::F,\
 		IN::F, IN::F, IN::F, IN::F,  IN::F, IN::F, IN::F, IN::F,   IN::F, IN::F, IN::F, IN::F,  IN::F, IN::F, IN::F, IN::F,\
@@ -41,20 +35,20 @@ namespace In
 	struct InWord
 	{
 		char word[MAX_LEN_BUFFER];	// слово
-		int line;		// строка в исходном тексте
-		static int size;// количество слов
+		int line;					// строка в исходном тексте
+		static int size;			// количество слов
 	};
 
 	struct IN
 	{
 		/*
-		S - ( ) [ ] # < > ! & * + - = , ;
-		P - пробел, табул€ци€
-		N (NEW)- нова€ строка
-		F (FALSE)- запрещЄнный
-		T (TRUE)- разрешЄнный
-		I (IGNORED)- игнорируемый
-		Q - "
+		S Ц ( ) [ ] # < > ! & * + - = , ;
+		P Ц пробел, табул€ци€
+		N (NEW) Ц нова€ строка
+		F (FALSE) Ц запрещЄнный
+		T (TRUE) Ц разрешЄнный
+		I (IGNORED) Ц игнорируемый
+		Q Ц "
 		*/
 		enum { T = 1024, F = 2048, I = 4096, S, Q, P, N };
 		int code[256] = IN_CODE_TABLE;

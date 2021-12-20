@@ -5,7 +5,7 @@
 #include<string>
 
 
-int DecimicalNotation(std::string input, int scaleofnot) 
+int DecimicalNotation(std::string input, int scaleofnot)	// токен 16-ного токена в 10-ное число
 {
 	std::string num = input.substr(1, input.size());
 	const char* c = num.c_str();
@@ -15,7 +15,7 @@ int DecimicalNotation(std::string input, int scaleofnot)
 
 namespace Lexer
 {
-	Graph graphs[N_GRAPHS] =								// соответствие 
+	Graph graphs[N_GRAPHS] =	// соответствие лексем и токенов
 	{
 		{ LEX_SEPARATORS, FST::FST(GRAPH_SEPARATORS)) },
 		{ LEX_LITERAL, FST::FST(GRAPH_INT_LITERAL) },
@@ -51,10 +51,10 @@ namespace Lexer
 		for (int i = idtable.size - 1; i >= 0; i--)
 			if (idtable.table[i].idtype == IT::IDTYPE::F)
 				return idtable.table[i].id;
-		return nullptr; // не найдено имя функции
+		return nullptr;		// не найдено имя функции
 	}
 
-	int getLiteralIndex(IT::IdTable ittable, char* value, IT::IDDATATYPE type) // получаем индекс повторного литерала(по значению)
+	int getLiteralIndex(IT::IdTable ittable, char* value, IT::IDDATATYPE type)	// получаем индекс повторного литерала(по значению)
 	{
 		for (int i = 0; i < ittable.size; i++)
 		{
@@ -62,13 +62,13 @@ namespace Lexer
 			{
 				switch (type)
 				{
-				case IT::IDDATATYPE::NUM:
+				case IT::IDDATATYPE::NUM:		// преобразовать токен целочесленного литерала в десятичное число
 					if (ittable.table[i].value.vint == atoi(value))
 						return i;
 					break;
 				case IT::IDDATATYPE::STR:
 					char buf[STR_MAXSIZE];
-					for (unsigned j = 1; j < strlen(value) - 1; j++) // без кавычек
+					for (unsigned j = 1; j < strlen(value) - 1; j++)	// строковый литерал без кавычек
 						buf[j - 1] = value[j];
 					buf[strlen(value) - 2] = IN_CODE_NULL;
 					if (strcmp(ittable.table[i].value.vstr.str, buf) == 0)
@@ -80,23 +80,23 @@ namespace Lexer
 		return NULLIDX_TI;
 	}
 
-	IT::IDDATATYPE getType(char* curword, char* idtype)
+	IT::IDDATATYPE getType(char* curword, char* idtype)		// какой тип токена
 	{
 		if (!strcmp(TYPE_PROCEDURE, idtype))
 			return IT::IDDATATYPE::PROC; // процедуры
 		if (!strcmp(TYPE_STRING, idtype))
-			return IT::IDDATATYPE::STR;  // строковый ид
+			return IT::IDDATATYPE::STR;  // строковый идентификатор
 		if (!strcmp(TYPE_NUMBER, idtype))
-			return IT::IDDATATYPE::NUM;	 // числовой  ид
+			return IT::IDDATATYPE::NUM;	 // числовой  идентификатор
 		if (isdigit(*curword) || *curword == LEX_MINUS)
-			return IT::IDDATATYPE::NUM;				// числовой литерал
+			return IT::IDDATATYPE::NUM;	 // целочисленный литерал
 		else if (*curword == IN_CODE_QUOTE)
-			return IT::IDDATATYPE::STR;	// строковый литерал
+			return IT::IDDATATYPE::STR;	 // строковый литерал
 
-		return IT::IDDATATYPE::UNDEF;		// неопределенный тип, индикатор ошибки
+		return IT::IDDATATYPE::UNDEF;	 // неопределенный тип; индикатор ошибки
 	}
 
-	int getIndexInLT(LT::LexTable& lextable, int itTableIndex)					// индекс первой встречи в таблице лексем
+	int getIndexInLT(LT::LexTable& lextable, int itTableIndex)		// индекс первого вхождения идентификатора в таблице лексем
 	{
 		if (itTableIndex == NULLIDX_TI)		// если идентификатор встречается впервые
 			return lextable.size;
@@ -106,7 +106,7 @@ namespace Lexer
 		return NULLIDX_TI;
 	}
 
-	bool isLiteral(char* id)
+	bool isLiteral(char* id)	// проверка, ялвяется ли токен литералом
 	{
 		if (isdigit(*id) || *id == IN_CODE_QUOTE || *id == LEX_MINUS)
 			return true;
@@ -124,7 +124,7 @@ namespace Lexer
 		return IT::STDFNC::F_NOT_STD;
 	}
 
-	char* getNextLiteralName()						// сгенерировать следующее имя литерала
+	char* getNextLiteralName()		// сгенерировать следующее имя литерала
 	{
 		static int literalNumber = 1;
 		char* buf = new char[SCOPED_ID_MAXSIZE], num[3];
@@ -135,57 +135,54 @@ namespace Lexer
 	}
 
 	IT::Entry* getEntry(		// формирует и возвращает строку ТИ
-		Lexer::LEX& tables,						// ТЛ + ТИ
-		char lex,								// лексема
-		char* id,								// идентификатор
-		char* idtype,							// предыдущая (тип)
-		bool isParam,							// признак параметра функции
-		bool isFunc,							// признак функции
-		Log::LOG log,							// протокол
-		int line,								// строка в исходном тексте
-		bool& lex_ok)							// флаг ошибки(по ссылке)
+		Lexer::LEX& tables,		// ТЛ + ТИ
+		char lex,				// лексема
+		char* id,				// идентификатор
+		char* idtype,			// предыдущая (тип)
+		bool isParam,			// признак параметра функции
+		bool isFunc,			// признак функции
+		Log::LOG log,			// протокол
+		int line,				// строка в исходном тексте
+		bool& lex_ok)			// флаг ошибки(по ссылке)
 	{
-		// тип данных
-		IT::IDDATATYPE type = getType(id, idtype);
+
+		IT::IDDATATYPE type = getType(id, idtype);	// тип данных
 		int index = IT::isId(tables.idtable, id);	// индекс существующего идентификатора или -1
 		if (lex == LEX_LITERAL)
 			index = getLiteralIndex(tables.idtable, id, type);
 		if (index != NULLIDX_TI)
-			return nullptr;	// уже существует
+			return nullptr;		// уже существует
 
 		IT::Entry* itentry = new IT::Entry;
-		itentry->iddatatype = type; // сохраняем тип данных
+		itentry->iddatatype = type;		// сохраняем тип данных
 
-		// индекс первой строки в таблице лексем 
-		itentry->idxfirstLE = getIndexInLT(tables.lextable, index);
+		itentry->idxfirstLE = getIndexInLT(tables.lextable, index);		// индекс первой строки в таблице лексем 
 
-		if (lex == LEX_LITERAL) // литерал
+		if (lex == LEX_LITERAL)		// литерал
 		{
 			bool int_ok = IT::SetValue(itentry, id);
 			if (!int_ok)
 			{
-				// превышен максимальный размер числового литерала
-				Log::writeError(log.stream, Error::GetError(313, line, 0));
+				Log::writeError(log.stream, Error::GetError(313, line, 0));		// превышен максимальный размер числового литерала
 				lex_ok = false;
 			}
 			if (itentry->iddatatype == IT::IDDATATYPE::STR && itentry->value.vstr.len == 0)
 			{
-				// пустой строковый литерал
-				Log::writeError(log.stream, Error::GetError(310, line, 0));
+				Log::writeError(log.stream, Error::GetError(310, line, 0));		// пустой строковый литерал
 				lex_ok = false;
 			}
 			strcpy_s(itentry->id, getNextLiteralName());
 			itentry->idtype = IT::IDTYPE::L;
 		}
-		else // идентификатор
+		else	// если идентификатор
 		{
 			switch (type)
 			{
-			case IT::IDDATATYPE::STR:
+			case IT::IDDATATYPE::STR:	// если строковый, то копируем литерал
 				strcpy_s(itentry->value.vstr.str, "");
 				itentry->value.vstr.len = STR_DEFAULT;
 				break;
-			case IT::IDDATATYPE::NUM:
+			case IT::IDDATATYPE::NUM:	// если целочисленный, то записываем
 				itentry->value.vint = NUM_DEFAULT;
 				break;
 			}
@@ -236,32 +233,28 @@ namespace Lexer
 
 			strncpy_s(itentry->id, id, SCOPED_ID_MAXSIZE);
 		}
-		// -------------------------------------------------------
-		int i = tables.lextable.size; // индекс в ТЛ текущего ИД
 
+		int i = tables.lextable.size;	 // индекс в ТЛ текущего идентификатора
 		if (i > 1 && itentry->idtype == IT::IDTYPE::V && tables.lextable.table[i - 2].lexema != LEX_NEW)
 		{
-			// в объявлении отсутствует ключевое слово new
-			Log::writeError(log.stream, Error::GetError(304, line, 0));
+			Log::writeError(log.stream, Error::GetError(304, line, 0));		// в объявлении отсутствует ключевое слово new
 			lex_ok = false;
 		}
 		if (i > 1 && itentry->idtype == IT::IDTYPE::F && tables.lextable.table[i - 1].lexema != LEX_FUNCTION)
 		{
-			// в объявлении не указан тип функции
-			Log::writeError(log.stream, Error::GetError(303, line, 0));
+			Log::writeError(log.stream, Error::GetError(303, line, 0));		// в объявлении не указан тип функции
 			lex_ok = false;
 		}
 		if (itentry->iddatatype == IT::IDDATATYPE::UNDEF)
 		{
-			// невозможно определелить тип
-			Log::writeError(log.stream, Error::GetError(300, line, 0));
+			Log::writeError(log.stream, Error::GetError(300, line, 0));		// невозможно определелить тип
 			lex_ok = false;
 		}
-		// --------------------------------------------------------
+
 		return itentry;
 	}
 
-	bool analyze(LEX& tables, In::IN& in, Log::LOG& log, Parm::PARM& parm)
+	bool analyze(LEX& tables, In::IN& in, Log::LOG& log, Parm::PARM& parm)		// анализ действий при встрече соответствующих лексем
 	{
 		static bool lex_ok = true;
 		tables.lextable = LT::Create(MAXSIZE_LT);
@@ -269,7 +262,7 @@ namespace Lexer
 
 		bool isParam = false, isFunc = false;
 		int enterPoint = NULL;
-		char curword[STR_MAXSIZE], nextword[STR_MAXSIZE];
+		char curword[STR_MAXSIZE], nextword[STR_MAXSIZE];	// один символ из исходного кода
 		int curline;
 		std::stack <char*> scopes;			// стек для хранения имени текущей области видимости
 
@@ -278,7 +271,7 @@ namespace Lexer
 			strcpy_s(curword, in.words[i].word);
 			if (i < In::InWord::size - 1)
 				strcpy_s(nextword, in.words[i + 1].word);
-			curline = in.words[i].line;
+			curline = in.words[i].line;		// берем исходную строку из структуры
 			isFunc = false;
 			int idxTI = NULLIDX_TI;
 
@@ -287,7 +280,7 @@ namespace Lexer
 				FST::FST fst(curword, graphs[j].graph);
 				if (FST::execute(fst))
 				{
-					char lexema = graphs[j].lexema;
+					char lexema = graphs[j].lexema;		// одна лексема из таблицы
 					switch (lexema)
 					{
 					case LEX_MAIN:
@@ -314,7 +307,6 @@ namespace Lexer
 						case LEX_RIGHTTHESIS:	// закрывающая скобка
 						{
 							isParam = false;
-							// конец области видимости
 							if (*in.words[i - 1].word == LEX_LEFTHESIS || (i > 2 && (tables.lextable.table[tables.lextable.size - 2].lexema == LEX_ID_TYPE)))
 								scopes.pop();
 							break;
@@ -326,19 +318,16 @@ namespace Lexer
 								break;
 							char* functionname = new char[MAXSIZE_ID];
 							char* scopename = getScopeName(tables.idtable, in.words[i - 1].word);
-							if (scopename == nullptr)  break;
+							if (scopename == nullptr)  break;		// получаем имя этой области
 							strcpy_s(functionname, MAXSIZE_ID, scopename);
 							scopes.push(functionname);
 							break;
 						}
 						case LEX_BRACELET:		// конец области видимости
 						{
-							// только в этом случае закрываем область видимости
 							if (*in.words[i + 1].word == LEX_ID_TYPE || *in.words[i + 1].word == LEX_PROCEDURE || *in.words[i + 1].word == LEX_MAIN)
-							{
 								if (!scopes.empty())
 									scopes.pop();
-							}
 							break;
 						}
 						}
@@ -349,23 +338,23 @@ namespace Lexer
 					case LEX_LITERAL:
 					{
 						char id[STR_MAXSIZE] = "";
-						idxTI = NULLDX_TI;  // индекс идентификатора в ТИ
+						idxTI = NULLDX_TI;		// индекс идентификатора в ТИ
 						if (*nextword == LEX_LEFTHESIS)
-							isFunc = true;						// идентификатор функции
+							isFunc = true;					// идентификатор функции
 						char* idtype = (isFunc && i > 1) ?	// тип идентификатора
 							in.words[i - 2].word : in.words[i - 1].word;		// пропускаем ключевое слово function
 						if (!isFunc && !scopes.empty())
 							strncpy_s(id, scopes.top(), MAXSIZE_ID);
 						strncat(id, curword, MAXSIZE_ID);
 						if (isLiteral(curword))
-							strcpy_s(id, curword); // литерал заменяется своим значением
+							strcpy_s(id, curword);	// литерал заменяется своим значением
 
 						IT::Entry* itentry = getEntry(tables, lexema, id, idtype, isParam, isFunc, log, curline, lex_ok);
-						if (itentry != nullptr) // первая встреча - объявление
+						if (itentry != nullptr)		// первая встреча - объявление
 						{
-							if (isFunc) // если функция - сохранить список параметров
+							if (isFunc)		// если функция - сохранить список параметров
 							{
-								if (getStandFunction(id) == IT::STDFNC::F_NOT_STD) // стандартная функция или нет
+								if (getStandFunction(id) == IT::STDFNC::F_NOT_STD)	// стандартная функция или нет
 								{
 									itentry->value.params.count = NULL;
 									itentry->value.params.types = new IT::IDDATATYPE[MAX_PARAMS_COUNT];
@@ -389,9 +378,9 @@ namespace Lexer
 							IT::Add(tables.idtable, *itentry);
 							idxTI = tables.idtable.size - 1;
 						}
-						else // повторный идентификатор (уже есть)
+						else     // повторный идентификатор
 						{
-							int i = tables.lextable.size - 1; // попытка переопределить идентификатор
+							int i = tables.lextable.size - 1;	// попытка переопределить идентификатор
 							if (i > 0 && tables.lextable.table[i - 1].lexema == LEX_NEW || tables.lextable.table[i].lexema == LEX_NEW
 								|| tables.lextable.table[i - 1].lexema == LEX_FUNCTION || tables.lextable.table[i].lexema == LEX_FUNCTION
 								|| tables.lextable.table[i - 1].lexema == LEX_ID_TYPE || tables.lextable.table[i].lexema == LEX_ID_TYPE
@@ -409,11 +398,11 @@ namespace Lexer
 					break;
 					}
 
-					LT::Entry* ltentry = new LT::Entry(lexema, curline, idxTI);
-					LT::Add(tables.lextable, *ltentry);
+					LT::Entry* ltentry = new LT::Entry(lexema, curline, idxTI);	
+					LT::Add(tables.lextable, *ltentry);			// каждую лексему добавляем в таблицу лексем
 					break;
 				}
-				else if (j == N_GRAPHS - 1) // цепочка не распознана
+				else if (j == N_GRAPHS - 1)		 // ошибка лексического анализатора: цепочка не распознана
 				{
 					Log::writeError(log.stream, Error::GetError(201, curline, 0));
 					lex_ok = false;
@@ -421,12 +410,12 @@ namespace Lexer
 			}
 		}
 
-		if (enterPoint == NULL) // не найдена точка входа
+		if (enterPoint == NULL)		// не найдена точка входа
 		{
 			Log::writeError(log.stream, Error::GetError(301));
 			lex_ok = false;
 		}
-		if (enterPoint > 1) //больше 1 точки входа
+		if (enterPoint > 1)		//больше одной точки входа
 		{
 			Log::writeError(log.stream, Error::GetError(302));
 			lex_ok = false;

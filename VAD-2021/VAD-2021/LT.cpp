@@ -3,23 +3,24 @@
 #include <iomanip>
 #include "LexAnalysis.h"
 #include "LT.h"
-namespace LT
+
+namespace LT	// таблица лексем
 {
-	Entry::Entry()
+	Entry::Entry()	// пустой экземпляр таблицы
 	{
 		lexema = NULL;
 		sn = NULL;
 		idxTI = NULLDX_TI;
 	}
 
-	Entry::Entry(char lexema, int snn, int idxti)
+	Entry::Entry(char lexema, int snn, int idxti)	// экземпляр таблицы
 	{
 		this->lexema = lexema;
 		this->sn = snn;
 		this->idxTI = idxti;
 	}
 
-	LexTable Create(int size)
+	LexTable Create(int size)	// создание таблицы лексем
 	{
 		if (size > MAXSIZE_LT)
 			throw ERROR_THROW(202);
@@ -29,13 +30,14 @@ namespace LT
 		return  lextable;
 	}
 
-	void Add(LexTable& lextable, Entry entry)
+	void Add(LexTable& lextable, Entry entry)	// добавление лексемы
 	{
 		if (lextable.size >= lextable.maxsize)
 			throw ERROR_THROW(202);
 		lextable.table[lextable.size++] = entry;
 	}
-	void writeLexTable(std::ostream* stream, LT::LexTable& lextable)
+
+	void writeLexTable(std::ostream* stream, LT::LexTable& lextable)	// вывод в файл протокола
 	{
 		*stream << "------------------------------ ТАБЛИЦА ЛЕКСЕМ  --------------------------------\n" << std::endl;
 		*stream << "|  N | ЛЕКСЕМА | СТРОКА | ИНДЕКС В ТИ |" << std::endl;
@@ -50,7 +52,7 @@ namespace LT
 		}
 	}
 
-	void writeLexemsOnLines(std::ostream* stream, LT::LexTable& lextable)
+	void writeLexemsOnLines(std::ostream* stream, LT::LexTable& lextable)	// соответствие лексем и токенов
 	{
 		*stream << "\n------------------  ЛЕКСЕМЫ, СООТВЕТСТВУЮЩИЕ ИСХОДНОМУ КОДУ -------------------\n" << std::endl;
 		for (int i = 0; i < lextable.size; )

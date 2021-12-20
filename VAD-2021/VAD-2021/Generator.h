@@ -5,8 +5,8 @@
 #include "LexAnalysis.h"
 
 
-#define SEPSTREMP  "\n;------------------------------\n"
-#define SEPSTR(x)  "\n;----------- " + string(x) + " ------------\n"
+#define SEPSTREMP  "\n;--------------------------------\n"
+#define SEPSTR(x)  "\n;------------- " + string(x) + " --------------\n"
 
 
 #define BEGIN ".586\n"\

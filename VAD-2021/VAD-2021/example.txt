@@ -1,12 +1,76 @@
+number function min(number x, number y)
+[
+	new number res;
+	condition: x < y #
+	istrue [res = x;]
+	isfalse [res = y;]#
+	return res;
+]
+procedure function stand (string a, string b)
+[
+	new number k;
+	k = lenght(a)+1;
+        write "Len + 1: ";
+	write k;
+	newline;
+	new string str;
+	str = concat(a,b);
+        write "concat: ";
+	write str;
+	newline;
+        
+	return;
+]
 main
 [
-write "test 2";
+	write "test1";
+	newline;
+	new number zz = q1;
+        new number d = qB;
+	write "num B:";
+	newline;
+	write zz;
+	newline;
+	new number x = 10;
+	new number y = 3;
+	x = x % y;
+	write x;
+	newline;
+	new number m = 10;
+	new number n = 3;
+	m = m / n;
+	write m;
+	newline;
+	new string strx = "Just ";
+	new string stry = "string";
+        new string strz = "70";
+        new number e;
+        write "from string in number: ";
+        e = atoii(strz);
+        write e;
+        newline;
+        new number result;
+        result = x{1{2;
+        write "Left shift: ";
+        write result;
+        newline;
+ 	new number t;
+	t = min (x,y);
+        write t;
+	newline;
+	new number ab = 3;
+	condition: ab ! 52 #
+	cycle [
+		write ab;
+		write " ";
+		ab = (ab + 2)*2;
+	]#
+	write " after cycle ";
+	write ab;
+	newline;
+	write "new 0x";
+	newline;
+	write d; 
+	newline;
+	stand(strx, stry);
 ]
-
-
-
-
-
-
-
-

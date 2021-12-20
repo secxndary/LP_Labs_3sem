@@ -4,10 +4,11 @@
 
 namespace FST
 {
-	RELATION::RELATION(char c = NULL, short ns = NULL)
+	// структура конечного автомата, считывающего графы переходов
+	RELATION::RELATION(char c = NULL, short ns = NULL)	// переход
 	{
-		this->symbol = c;
-		this->nnode = ns;
+		this->symbol = c;	// символ перехода
+		this->nnode = ns;	// соответствующее состояние
 	};
 
 	NODE::NODE()
@@ -16,7 +17,7 @@ namespace FST
 		this->relations = NULL;
 	};
 
-	NODE::NODE(short n, RELATION rel, ...)
+	NODE::NODE(short n, RELATION rel, ...)		// состояние
 	{
 		RELATION* temp = &rel;
 		this->relations = new RELATION[n];
@@ -25,7 +26,7 @@ namespace FST
 			this->relations[i] = *(temp + i);
 	};
 
-	FST::FST(short ns, NODE n, ...)
+	FST::FST(short ns, NODE n, ...)		// конечный автомат
 	{
 		this->node = new NODE[ns];
 		NODE* temp = &n;
@@ -35,7 +36,7 @@ namespace FST
 			this->node[i] = *(temp + i);
 	}
 
-	FST::FST(char* s, FST& fst)
+	FST::FST(char* s, FST& fst)	
 	{
 		this->node = new NODE[fst.nstates];
 		NODE* temp = fst.node;
@@ -46,26 +47,16 @@ namespace FST
 			this->node[i] = *(temp + i);
 	}
 
-	bool execute(FST& fst)
+	bool execute(FST& fst)		// выполнение автомата
 	{
 		int i, j;
-		memset(fst.rstates, -1, fst.nstates * sizeof(short)); // Заполняем fst.rstates массив -1-ами размером  fst.nstates * sizeof(short)
+		memset(fst.rstates, -1, fst.nstates * sizeof(short));		// заполняем fst.rstates массив -1-ами размером  fst.nstates * sizeof(short)
 		for (fst.rstates[0] = 0, fst.position = 0; fst.position < (signed)(strlen(fst.string)); fst.position++)
-		{
 			for (i = 0; i < fst.nstates; i++)
-			{
 				if (fst.rstates[i] == fst.position)
-				{
-					for (j = 0; j < fst.node[i].n_relation; j++) //релейшены 
-					{
+					for (j = 0; j < fst.node[i].n_relation; j++)	// переходы
 						if (fst.node[i].relations[j].symbol == fst.string[fst.position])
-						{
 							fst.rstates[fst.node[i].relations[j].nnode] = fst.position + 1;
-						}
-					};
-				};
-			};
-		};
-		return (fst.rstates[fst.nstates - 1] == (strlen(fst.string))); // Совпадает ли конечная позиция с длиной строки
+		return (fst.rstates[fst.nstates - 1] == (strlen(fst.string))); // совпадает ли конечная позиция с длиной строки
 	};
 }

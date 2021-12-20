@@ -10,23 +10,26 @@ namespace MFST
 {
 	MFST::MfstState::MfstState() // конструктор по умолчанию
 	{
-		lenta_position = 0; //позиция на ленте
-		nrule = -1; //номер текущего правила
-		nrulechain = -1; //номер текущей цепочки
+		lenta_position = 0; // позиция на ленте
+		nrule = -1;			// номер текущего правила
+		nrulechain = -1;	// номер текущей цепочки
 	};
-	MfstState::MfstState(short pposition, MFSTSTSTACK pst, short pnrulechain) //конструктор (позиция на ленте, стек автомата, номер текущей цепочки и текущего правила)
+
+	MfstState::MfstState(short pposition, MFSTSTSTACK pst, short pnrulechain) // конструктор (позиция на ленте, стек автомата, номер текущей цепочки и текущего правила)
 	{
-		lenta_position = pposition; //позиция на ленте
-		st = pst; //стек автомата
-		nrulechain = pnrulechain;//номер текущего правила и цепочки
+		lenta_position = pposition; // позиция на ленте
+		st = pst;					// стек автомата
+		nrulechain = pnrulechain;	// номер текущего правила и цепочки
 	};
-	MfstState::MfstState(short pposition, MFSTSTSTACK pst, short pnrule, short pnrulechain) //конструктор (позиция на ленте, стек автомата,номер текущего правила, номер текущей цепочки)
+
+	MfstState::MfstState(short pposition, MFSTSTSTACK pst, short pnrule, short pnrulechain) // конструктор (позиция на ленте, стек автомата,номер текущего правила, номер текущей цепочки)
 	{
-		lenta_position = pposition;//позиция в ленте
-		st = pst;//стек автомата
-		nrule = pnrule;//номер текущего правила
-		nrulechain = pnrulechain;//номер текущей цепочки
+		lenta_position = pposition;	// позиция в ленте
+		st = pst;					// стек автомата
+		nrule = pnrule;				// номер текущего правила
+		nrulechain = pnrulechain;	// номер текущей цепочки
 	};
+
 	Mfst::MfstDiagnosis::MfstDiagnosis()
 	{
 		lenta_position = -1;
@@ -34,80 +37,85 @@ namespace MFST
 		nrule = -1;
 		nrule_chain = -1;
 	};
-	Mfst::MfstDiagnosis::MfstDiagnosis(short plenta_position, RC_STEP prc_step, short pnrule, short pnrule_chain)//диагностика
-	{                                                     //(позиция на ленте, код завершения шага, номер правила, номер цепочки правила)
-		lenta_position = plenta_position; //позиция на ленте
-		rc_step = prc_step;//код завершения шага
-		nrule = pnrule;//номер правила
-		nrule_chain = pnrule_chain;//номер цепочки правила
+
+	Mfst::MfstDiagnosis::MfstDiagnosis(short plenta_position, RC_STEP prc_step, short pnrule, short pnrule_chain)	// диагностика
+	{            // (позиция на ленте, код завершения шага, номер правила, номер цепочки правила)
+		lenta_position = plenta_position;	// позиция на ленте
+		rc_step = prc_step;					// код завершения шага
+		nrule = pnrule;						// номер правила
+		nrule_chain = pnrule_chain;			// номер цепочки правила
 	};
-	Mfst::Mfst() { lenta = 0; lenta_size = lenta_position = 0; }; //конструктор по умолчанию 
-	Mfst::Mfst(Lexer::LEX plex, GRB::Greibach pgrebach)//(результат работы лексического анализатора, грамматика Грейбах)
+
+	Mfst::Mfst() { lenta = 0; lenta_size = lenta_position = 0; }; // конструктор по умолчанию 
+	Mfst::Mfst(Lexer::LEX plex, GRB::Greibach pgrebach)		// (результат работы лексического анализатора, грамматика Грейбах)
 	{
-		grebach = pgrebach; //Грейбах
-		lex = plex; //рез работы лекс анализатора
-		lenta = new short[lenta_size = lex.lextable.size];//размер ленты = текущий размер таблицы лексем
-		for (int k = 0; k < lenta_size; k++)lenta[k] = TS(lex.lextable.table[k].lexema);//заносит в ленту терминалы
+		grebach = pgrebach; // Грейбах
+		lex = plex;		// рез работы лекс анализатора
+		lenta = new short[lenta_size = lex.lextable.size];	// размер ленты = текущий размер таблицы лексем
+		for (int k = 0; k < lenta_size; k++)lenta[k] = TS(lex.lextable.table[k].lexema);	// заносит в ленту терминалы
 		lenta_position = 0;
-		st.push(grebach.stbottomT);//добавляет дно стека
-		st.push(grebach.startN);//добавляет стартовый символ
-		nrulechain = -1;//изначально правило равно -1
+		st.push(grebach.stbottomT);		// добавляет дно стека
+		st.push(grebach.startN);		// добавляет стартовый символ
+		nrulechain = -1;				// изначально правило равно -1
 	};
-	Mfst::RC_STEP Mfst::step(const Log::LOG& log) //выполнить шаг автомата
+
+	Mfst::RC_STEP Mfst::step(const Log::LOG& log) // выполнить шаг автомата
 	{
-		RC_STEP rc = SURPRISE; //код возврата = ошибка возврата
+		RC_STEP rc = SURPRISE;	// код возврата = ошибка возврата
 		if (lenta_position < lenta_size)
 		{
-			if (ISNS(st.top())) //извлекаем последний элемент стека и проверяем нетерминал ли он
+			if (ISNS(st.top()))		// извлекаем последний элемент стека и проверяем нетерминал ли он
 			{
 				GRB::Rule rule;
-				if ((nrule = grebach.getRule(st.top(), rule)) >= 0)//смотрим, если такое правило есть идём дальше
+				if ((nrule = grebach.getRule(st.top(), rule)) >= 0)	// смотрим, если такое правило есть идём дальше
 				{
 					GRB::Rule::Chain chain;
-					if ((nrulechain = rule.getNextChain(lenta[lenta_position], chain, nrulechain + 1)) >= 0)//получаем след цепочку и выводим её номер, или -1
+					if ((nrulechain = rule.getNextChain(lenta[lenta_position], chain, nrulechain + 1)) >= 0)	// получаем след цепочку и выводим её номер, или -1
 					{
-						MFST_TRACE1(log)//вывод
-							savestate(log);//сохранить состояние автомата
-						st.pop();//извлекаем верхушку стека.
-						push_chain(chain); //поместить цепочку правила в стек
-						rc = NS_OK; //найдено правило и цепочка... цепочка записана в стек
-						MFST_TRACE2(log);//вывод
+						MFST_TRACE1(log)		// вывод
+							savestate(log);		// сохранить состояние автомата
+						st.pop();				// извлекаем верхушку стека.
+						push_chain(chain);		// поместить цепочку правила в стек
+						rc = NS_OK;				// найдено правило и цепочка... цепочка записана в стек
+						MFST_TRACE2(log);		// вывод
 					}
 					else
 					{
-						MFST_TRACE4(log, "TNS_NORULECHAIN/NS_NORULE")//вывод
-							savediagnois(NS_NORULECHAIN); //код завершения
-						rc = reststate(log) ? NS_NORULECHAIN : NS_NORULE; //восстановить состояние автомата
+						MFST_TRACE4(log, "TNS_NORULECHAIN/NS_NORULE")		// вывод
+							savediagnois(NS_NORULECHAIN);					// код завершения
+						rc = reststate(log) ? NS_NORULECHAIN : NS_NORULE;	// восстановить состояние автомата
 					};
 				}
-				else rc = NS_ERROR;//неизвестный нетерминальный символ грамматики
+				else rc = NS_ERROR;		// неизвестный нетерминальный символ грамматики
 			}
-			else if ((st.top() == lenta[lenta_position]))//если словили $
+			else if ((st.top() == lenta[lenta_position]))	// если словили $
 			{
-				lenta_position++; //продвигаем ленту
-				st.pop();//вершина стека
-				nrulechain = -1; //номер текущего правила равен -1
+				lenta_position++;	// продвигаем ленту
+				st.pop();			// вершина стека
+				nrulechain = -1;	// номер текущего правила равен -1
 				rc = TS_OK;
 				MFST_TRACE3(log)
 			}
-			else { MFST_TRACE4(log, "TS_NOK/NS_NORULECHАIN") rc = reststate(log) ? TS_NOK : NS_NORULECHAIN; }; //нет правил для цепочки
+			else { MFST_TRACE4(log, "TS_NOK/NS_NORULECHАIN") rc = reststate(log) ? TS_NOK : NS_NORULECHAIN; }; // нет правил для цепочки
 		}
 		else { rc = LENTA_END; MFST_TRACE4(log, "LENTA_END") };
 		return rc;
 	};
 
-	bool Mfst::push_chain(GRB::Rule::Chain chain) //поместить цепочку правила в стек (цепочка правила)
+	bool Mfst::push_chain(GRB::Rule::Chain chain)	// поместить цепочку правила в стек (цепочка правила)
 	{
-		for (int k = chain.size - 1; k >= 0; k--) st.push(chain.nt[k]); //к = длинне цепочке-1. заносим цепочку в стек
+		for (int k = chain.size - 1; k >= 0; k--) st.push(chain.nt[k]);		// к = длинне цепочке-1. заносим цепочку в стек
 		return true;
 	};
-	bool Mfst::savestate(const Log::LOG& log) //сохранить состояние автомата(для отката)
+
+	bool Mfst::savestate(const Log::LOG& log)	 // сохранить состояние автомата(для отката)
 	{
-		storestate.push(MfstState(lenta_position, st, nrule, nrulechain)); //стек для сохранения состояния. заносим сохраняемое состояние
+		storestate.push(MfstState(lenta_position, st, nrule, nrulechain));	// стек для сохранения состояния. заносим сохраняемое состояние
 		MFST_TRACE6(log, "SAVESTATE:", storestate.size());
 		return true;
 	};
-	bool Mfst::reststate(const Log::LOG& log) //восстановить состояние автомата
+
+	bool Mfst::reststate(const Log::LOG& log)	 // восстановить состояние автомата
 	{
 		bool rc = false;
 		MfstState state;
@@ -124,7 +132,8 @@ namespace MFST
 		};
 		return rc;
 	};
-	bool Mfst::savediagnois(RC_STEP prc_step)
+
+	bool Mfst::savediagnois(RC_STEP prc_step)	// сохранение диагностики
 	{
 		bool rc = false;
 		short k = 0;
@@ -136,7 +145,8 @@ namespace MFST
 		};
 		return rc;
 	};
-	bool Mfst::start(const Log::LOG& log)
+
+	bool Mfst::start(const Log::LOG& log)	// начало работы mfst
 	{
 		bool rc = false;
 		RC_STEP rc_step = SURPRISE;
@@ -145,7 +155,7 @@ namespace MFST
 		while (rc_step == NS_OK || rc_step == NS_NORULECHAIN || rc_step == TS_OK || rc_step == TS_NOK)
 			rc_step = step(log);
 		switch (rc_step)
-		{
+		{			// вывод в файл
 		case LENTA_END:         MFST_TRACE4(log, "------>LENTA_END")
 			* log.stream << "-------------------------------------------------------------------------------------" << std::endl;
 			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d:всего строк %d, синтаксический анализ выполнен без ошибок ", 0, lenta_size);
@@ -166,7 +176,7 @@ namespace MFST
 
 	};
 
-	char* Mfst::getCSt(char* buf)//вывод стека
+	char* Mfst::getCSt(char* buf)	// вывод стека
 	{
 		for (int k = (signed)st.size() - 1; k >= 0; --k)
 		{
@@ -176,14 +186,16 @@ namespace MFST
 		buf[st.size()] = 0x00;
 		return buf;
 	};
-	char* Mfst::getCLenta(char* buf, short pos, short n)//вывод ленты
+
+	char* Mfst::getCLenta(char* buf, short pos, short n)	// вывод ленты
 	{
 		short i, k = (pos + n < lenta_size) ? pos + n : lenta_size;
 		for (i = pos; i < k; i++)buf[i - pos] = GRB::Rule::Chain::alphabet_to_char(lenta[i]);
 		buf[i - pos] = 0x00;
 		return buf;
 	};
-	char* Mfst::getDiagnosis(short n, char* buf)//вывод ошибок
+
+	char* Mfst::getDiagnosis(short n, char* buf)	// вывод ошибок
 	{
 		char* rc = new char[2];
 		int errid = 0;
@@ -197,7 +209,8 @@ namespace MFST
 		};
 		return rc;
 	};
-	void Mfst::printrules(const Log::LOG& log)//вывод правил
+
+	void Mfst::printrules(const Log::LOG& log)	// вывод правил
 	{
 		MfstState state;
 		GRB::Rule rule;
@@ -208,7 +221,8 @@ namespace MFST
 			MFST_TRACE7(log)
 		};
 	};
-	bool Mfst::savededucation()//вывод дерева разбора
+
+	bool Mfst::savededucation()	// вывод дерева разбора
 	{
 		MfstState state;
 		GRB::Rule rule;
