@@ -20,30 +20,26 @@ ExitProcess PROTO:DWORD
 .const
 		newline byte 13, 10, 0
 		LTRL1 sdword 1
-		LTRL2 byte 'Len + 1: ', 0
-		LTRL3 byte 'concat: ', 0
-		LTRL4 byte 'test1', 0
-		LTRL5 byte 'num B:', 0
+		LTRL2 byte 'Lenght + 1: ', 0
+		LTRL3 byte 'String concat: ', 0
+		LTRL4 sdword 2
+		LTRL5 sdword 3
 		LTRL6 sdword 10
-		LTRL7 sdword 3
-		LTRL8 byte 'Just ', 0
-		LTRL9 byte 'string', 0
-		LTRL10 byte '70', 0
-		LTRL11 byte 'from string in number: ', 0
-		LTRL12 sdword 2
-		LTRL13 byte 'Left shift: ', 0
-		LTRL14 sdword 52
-		LTRL15 byte ' ', 0
-		LTRL16 byte ' after cycle ', 0
-		LTRL17 byte 'new 0x', 0
+		LTRL7 byte 'Just ', 0
+		LTRL8 byte 'string', 0
+		LTRL9 byte '70', 0
+		LTRL10 byte 'from string in number: ', 0
+		LTRL11 sdword 7
+		LTRL12 byte 'Left shift: ', 0
+		LTRL13 sdword 100
+		LTRL14 byte ' ', 0
+		LTRL15 byte ' after cycle ', 0
 .data
 		temp sdword ?
 		buffer byte 256 dup(0)
 		minres sdword 0
 		standk sdword 0
 		standstr dword ?
-		mainzz sdword 0
-		maind sdword 0
 		mainx sdword 0
 		mainy sdword 0
 		mainm sdword 0
@@ -153,41 +149,12 @@ stand ENDP
 
 ;------------- MAIN --------------
 main PROC
-
-push offset LTRL4
-call outstr
-
-push offset newline
-call outstr
-
-
-pop ebx
-mov mainzz, ebx
-
-
-pop ebx
-mov maind, ebx
-
-
-push offset LTRL5
-call outstr
-
-push offset newline
-call outstr
-
-
-push mainzz
-call outnum
-
-push offset newline
-call outstr
-
-push LTRL6
+push LTRL4
 
 pop ebx
 mov mainx, ebx
 
-push LTRL7
+push LTRL5
 
 pop ebx
 mov mainy, ebx
@@ -216,7 +183,7 @@ push LTRL6
 pop ebx
 mov mainm, ebx
 
-push LTRL7
+push LTRL5
 
 pop ebx
 mov mainn, ebx
@@ -239,11 +206,11 @@ call outnum
 push offset newline
 call outstr
 
-mov mainstrx, offset LTRL8
-mov mainstry, offset LTRL9
-mov mainstrz, offset LTRL10
+mov mainstrx, offset LTRL7
+mov mainstry, offset LTRL8
+mov mainstrz, offset LTRL9
 
-push offset LTRL11
+push offset LTRL10
 call outstr
 
 
@@ -263,13 +230,7 @@ push offset newline
 call outstr
 
 push mainx
-push LTRL1
-pop ebx 
-pop eax 
-mov cl, bl 
-shl eax, cl
-push eax
-push LTRL12
+push LTRL11
 pop ebx 
 pop eax 
 mov cl, bl 
@@ -280,7 +241,7 @@ pop ebx
 mov mainresult, ebx
 
 
-push offset LTRL13
+push offset LTRL12
 call outstr
 
 
@@ -306,15 +267,15 @@ call outnum
 push offset newline
 call outstr
 
-push LTRL7
+push LTRL5
 
 pop ebx
 mov mainab, ebx
 
 mov edx, mainab
-cmp edx, LTRL14
+cmp edx, LTRL13
 
-jnz cycle2
+jl cycle2
 jmp cyclenext2
 cycle2:
 
@@ -322,16 +283,16 @@ push mainab
 call outnum
 
 
-push offset LTRL15
+push offset LTRL14
 call outstr
 
 push mainab
-push LTRL12
+push LTRL4
 pop ebx
 pop eax
 add eax, ebx
 push eax
-push LTRL12
+push LTRL4
 pop ebx
 pop eax
 imul eax, ebx
@@ -341,30 +302,16 @@ pop ebx
 mov mainab, ebx
 
 mov edx, mainab
-cmp edx, LTRL14
+cmp edx, LTRL13
 
-jnz cycle2
+jl cycle2
 cyclenext2:
 
-push offset LTRL16
+push offset LTRL15
 call outstr
 
 
 push mainab
-call outnum
-
-push offset newline
-call outstr
-
-
-push offset LTRL17
-call outstr
-
-push offset newline
-call outstr
-
-
-push maind
 call outnum
 
 push offset newline
