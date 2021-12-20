@@ -9,7 +9,7 @@
 #define ERROR_THROW_IN(id, line, cells)\
 	Error::GetError(id, line, cells);	
 
-#define ERROR_ENTRY(id, message) {id, message}	//элемент таблицы ошибок
+#define ERROR_ENTRY(id, message) {id, message}		//элемент таблицы ошибок
 
 #define ERROR_ENTRY_NODEF(id)		ERROR_ENTRY(-id, "Неопределенная ошибка")
 
@@ -22,14 +22,14 @@
 
 namespace Error
 {
-	struct ERROR								//тип исключения для throw ERROR_THROW | ERROR_THROW_IN в catch(ERROR)
+	struct ERROR									//тип исключения для throw ERROR_THROW | ERROR_THROW_IN в catch(ERROR)
 	{
 		int id;
 		char message[ERROR_MAXSIZE_MESSAGE];
 		struct
 		{
-			short line;							//номер строки (0, 1, 2, ...)
-			short col;							//номер позиции в строке(0, 1, 2, ...)
+			short line;								//номер строки (0, 1, 2, ...)
+			short col;								//номер позиции в строке(0, 1, 2, ...)
 		} position;
 	};
 

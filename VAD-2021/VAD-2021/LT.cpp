@@ -37,7 +37,7 @@ namespace LT
 	}
 	void writeLexTable(std::ostream* stream, LT::LexTable& lextable)
 	{
-		*stream << "------------------------------ ÒÀÁËÈÖÀ ËÅÊÑÅÌ  ------------------------\n" << std::endl;
+		*stream << "------------------------------ ÒÀÁËÈÖÀ ËÅÊÑÅÌ  --------------------------------\n" << std::endl;
 		*stream << "|  N | ËÅÊÑÅÌÀ | ÑÒÐÎÊÀ | ÈÍÄÅÊÑ Â ÒÈ |" << std::endl;
 		for (int i = 0; i < lextable.size; i++)
 		{
@@ -52,7 +52,7 @@ namespace LT
 
 	void writeLexemsOnLines(std::ostream* stream, LT::LexTable& lextable)
 	{
-		*stream << "\n-----------------  ËÅÊÑÅÌÛ ÑÎÎÒÂÅÒÑÒÂÓÞÙÈÅ ÈÑÕÎÄÍÎÌÓ ÊÎÄÓ ---------------------\n" << std::endl;
+		*stream << "\n------------------  ËÅÊÑÅÌÛ, ÑÎÎÒÂÅÒÑÒÂÓÞÙÈÅ ÈÑÕÎÄÍÎÌÓ ÊÎÄÓ -------------------\n" << std::endl;
 		for (int i = 0; i < lextable.size; )
 		{
 			int line = lextable.table[i].sn;
@@ -66,6 +66,6 @@ namespace LT
 			}
 			*stream << std::endl;
 		}
-		*stream << "-------------------------------------------------------------------------\n\n";
+		*stream << "-------------------------------------------------------------------------------\n\n";
 	}
 }

@@ -1,36 +1,13 @@
-﻿#include "pch.h"
-#include "Log.h"
-#include "Error.h"
-#include "Parm.h"
-#include "LexAnalysis.h"
-#include "In.h"
-#include "IT.h"
-#include "LT.h"
-#include "PolishNotation.h"
-#include "SemAnalysis.h"
-#include "MFST.h"
-#include "Generator.h"
+﻿#include "stdafx.h"
 using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	char LEXERROR[] = "Лексический анализ завершен с ошибками";
-	char SYNTERROR[] = "Синтаксический анализ завершен с ошибками";
-	char SEMERROR[] = "Обнаружены семантические ошибки";
-	char POLISHERROR[] = "Ошибка при попытке преобразования выражения";
-	char LEXGOOD[] = "Лексический анализ завершен без ошибок";
-	char SYNTGOOD[] = "Синтаксический анализ завершен без ошибок";
-	char SEMGOOD[] = "Семантический анализ завершен без ошибок";
-	char POLISHGOOD[] = "Преобразование выражений завершено без ошибок";
-	char MESSAGE[] = "--------------------КОНЕЧНЫЕ ТАБЛИЦЫ ЛЕКСЕМ И ИДЕНТИФИКАТОРОВ-------------------";
-	char STOP[] = "\nВыполнение программы остановлено";
-	char ALLGOOD[] = "Программа успешно завершена!";
 	setlocale(LC_ALL, "Russian");
 	Log::LOG log;
 
 	try
 	{
-
 		Parm::PARM parm = Parm::getparm(argc, argv);                            //получить параметры
 		log = Log::getstream(parm.log);
 		Log::writeLog(log);														//написать заголовок журнала
@@ -95,7 +72,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		LT::writeLexemsOnLines(&std::cout, tables.lextable);
 
 		Gener::CodeGeneration(tables, parm, log);								//выполнить генерацию кода
-		Log::writeLine(log.stream, ALLGOOD, "");									//итог работы программы
+		Log::writeLine(log.stream, ALLGOOD, "");								//итог работы программы
 		Log::writeLine(&std::cout, ALLGOOD, "");
 		Log::Close(log);													    //закрыть журнал
 	}

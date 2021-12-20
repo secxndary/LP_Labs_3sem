@@ -4,17 +4,23 @@
 #include<stack>
 #include<string>
 
-int DecimicalNotation(std::string input, int scaleofnot) {
+
+int DecimicalNotation(std::string input, int scaleofnot) 
+{
 	std::string num = input.substr(1, input.size());
-	return std::stoi(num, nullptr, scaleofnot);
+	const char* c = num.c_str();
+	int res = strtol(c, NULL, 16);
+	return res;
 }
+
 namespace Lexer
 {
-	Graph graphs[N_GRAPHS] =
+	Graph graphs[N_GRAPHS] =								// соответствие 
 	{
-		{ LEX_SEPARATORS, FST::FST(GRAPH_SEPARATORS) },
+		{ LEX_SEPARATORS, FST::FST(GRAPH_SEPARATORS)) },
 		{ LEX_LITERAL, FST::FST(GRAPH_INT_LITERAL) },
 		{ LEX_LITERAL, FST::FST(GRAPH_STRING_LITERAL) },
+		{ LEX_LITERAL_NUMO, FST::FST(GRAPH_V_LITERAL) },
 		{ LEX_NEW, FST::FST(GRAPH_NEW) },
 		{ LEX_MAIN, FST::FST(GRAPH_MAIN) },
 		{ LEX_ID_TYPE, FST::FST(GRAPH_NUMBER) },
@@ -28,7 +34,7 @@ namespace Lexer
 		{ LEX_CYCLE, FST::FST(GRAPH_CYCLE) },
 		{ LEX_ISFALSE, FST::FST(GRAPH_ISFALSE) },
 		{ LEX_ISTRUE, FST::FST(GRAPH_ISTRUE) },
-		{ LEX_LITERAL_NUMO, FST::FST(GRAPH_V_LITERAL) },
+		{ LEX_MOD, FST::FST(GRAPH_MOD) },
 		{ LEX_ID, FST::FST(GRAPH_ID) }
 	};
 
@@ -339,20 +345,6 @@ namespace Lexer
 						lexema = *curword;
 						break;
 					}
-					case LEX_LITERAL_NUMO:
-					{
-
-
-						int value = DecimicalNotation(curword, 8);
-
-						if (value < NUM_MINSIZE || value > NUM_MAXSIZE)
-							throw ERROR_THROW(204);
-						tables.idtable.table[tables.idtable.size - 1].value.vint = value;
-
-						LT::Entry entrylt(graphs[j].lexema, in.words[i].line);
-						//LT::Add(tables.lextable, entrylt); // пишем в ЛТ
-						break;
-					}
 					case LEX_ID:
 					case LEX_LITERAL:
 					{
@@ -403,13 +395,14 @@ namespace Lexer
 							if (i > 0 && tables.lextable.table[i - 1].lexema == LEX_NEW || tables.lextable.table[i].lexema == LEX_NEW
 								|| tables.lextable.table[i - 1].lexema == LEX_FUNCTION || tables.lextable.table[i].lexema == LEX_FUNCTION
 								|| tables.lextable.table[i - 1].lexema == LEX_ID_TYPE || tables.lextable.table[i].lexema == LEX_ID_TYPE
-								|| tables.lextable.table[i - 1].lexema == LEX_PROCEDURE || tables.lextable.table[i].lexema == LEX_PROCEDURE)
+								|| tables.lextable.table[i - 1].lexema == LEX_PROCEDURE || tables.lextable.table[i].lexema == LEX_PROCEDURE
+								|| tables.lextable.table[i - 1].lexema == LEX_LITERAL_NUMO)
 							{
 								Log::writeError(log.stream, Error::GetError(305, curline, 0));
 								lex_ok = false;
 							}
 							idxTI = IT::isId(tables.idtable, id);	// индекс существующего идентификатора
-							if (lexema == LEX_LITERAL)
+							if (lexema == LEX_LITERAL || lexema == LEX_LITERAL_NUMO)
 								idxTI = getLiteralIndex(tables.idtable, curword, getType(id, in.words[i - 1].word)); // или литерала
 						}
 					}

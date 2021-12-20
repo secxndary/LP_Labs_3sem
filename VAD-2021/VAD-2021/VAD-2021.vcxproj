@@ -167,11 +167,13 @@
     <ClInclude Include="LexAnalysis.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LT.h" />
+    <ClInclude Include="Messages.h" />
     <ClInclude Include="MFST.h" />
     <ClInclude Include="Parm.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PolishNotation.h" />
     <ClInclude Include="SemAnalysis.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

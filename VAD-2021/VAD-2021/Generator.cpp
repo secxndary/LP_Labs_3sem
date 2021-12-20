@@ -26,8 +26,8 @@ namespace Gener
 
 		for (int j = i + 1; LEXEMA(j) != LEX_RIGHTTHESIS; j++)
 		{
-			if (LEXEMA(j) == LEX_ID || LEXEMA(j) == LEX_LITERAL)
-				temp.push(ITENTRY(j)); // // заполняем стек в прямом порядке	
+			if (LEXEMA(j) == LEX_ID || LEXEMA(j) == LEX_LITERAL || LEXEMA(j) == LEX_LITERAL_NUMO)
+				temp.push(ITENTRY(j)); // заполняем стек в прямом порядке	
 		}
 		str += "\n";
 
@@ -75,6 +75,18 @@ namespace Gener
 					else  str = str + "push " + ITENTRY(j).id + "\n";
 					break;
 				}
+				//case LEX_LITERAL_NUMO:
+				//{
+				//	if (ITENTRY(j).idtype == IT::IDTYPE::F || ITENTRY(j).idtype == IT::IDTYPE::S) // если в выражении вызов функции
+				//	{
+				//		str = str + genCallFuncCode(tables, log, j); // функция возвращает результат в eax
+				//		str = str + "push eax\n";				// результат выражения в стек для дальнейшего вычисления выражения
+				//		while (LEXEMA(j) != LEX_RIGHTTHESIS) j++;
+				//		break;
+				//	}
+				//	else  str = str + "push " + ITENTRY(j).id + "\n";
+				//	break;
+				//}
 				case LEX_PLUS:
 					str = str + "pop ebx\npop eax\nadd eax, ebx\npush eax\n"; break;
 				case LEX_MINUS:
@@ -87,6 +99,8 @@ namespace Gener
 					str = str + "pop ebx \npop eax \nmov cl, bl \nshr eax, cl\npush eax\n"; break;
 				case LEX_LEFT:
 					str = str + "pop ebx \npop eax \nmov cl, bl \nshl eax, cl\npush eax\n"; break;
+				case LEX_MOD:
+					str = str + "pop ebx \nmov edx, 0 \npop eax \nidiv ebx \npush edx \nmov eax, edx\n"; break;
 				}
 			} // цикл вычисления
 
@@ -226,7 +240,7 @@ namespace Gener
 	void CodeGeneration(Lexer::LEX& tables, Parm::PARM& parm, Log::LOG& log)
 	{
 		vector <string> v = startFillVector(tables);
-		ofstream ofile("D:\\KDV_2019\\Generation\\Generation\\Gen.asm");
+		ofstream ofile("C:\\Users\\valda\\source\\repos\\semester #3\\LP_Labs\\VAD-2021\\Generation\\Generation\\Generation.asm");
 		string funcname;	// имя текущей функции
 		string cyclecode;	// эпилог цикла: cmp + j
 		int pcount;			// количество параметров текущей функции

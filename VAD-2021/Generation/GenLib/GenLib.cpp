@@ -2,7 +2,7 @@
 
 extern "C"
 {
-	int __stdcall lenght(char* buffer, char* str)
+	int __stdcall lenght(char* buffer, char* str)					// вычисление длины строки
 	{
 		if (str == nullptr)
 			return 0;
@@ -16,11 +16,11 @@ extern "C"
 	}
 
 
-
-	int __stdcall atoii(char* buffer, char* ptr)
+	int __stdcall atoii(char* buffer, char* ptr)					// преобразование символьного литерала
 	{
 		int n = 0;
-		while (*ptr >= '0' && *ptr <= '9') {
+		while (*ptr >= '0' && *ptr <= '9')
+		{
 			n *= 10;
 			n += *ptr++;
 			n -= '0';
@@ -30,7 +30,7 @@ extern "C"
 	}
 
 
-	char* __stdcall concat(char* buffer, char* str1, char* str2)
+	char* __stdcall concat(char* buffer, char* str1, char* str2)	// конкатенация строк
 	{
 		int i = NULL, len1 = NULL, len2 = NULL;
 		for (int j = 0; str1[j] != '\0'; j++)
@@ -49,18 +49,18 @@ extern "C"
 		return buffer;
 	}
 
-	int __stdcall outnum(int value)
+
+	int __stdcall outnum(int value)									// вывод в консоль целочисленного литерала
 	{
 		std::cout << value;
 		return 0;
 	}
 
-	int __stdcall outstr(char* ptr)
+
+	int __stdcall outstr(char* ptr)									// вывод в консоль строкового литерала
 	{
 		if (ptr == nullptr)
-		{
 			std::cout << std::endl;
-		}
 		for (int i = 0; ptr[i] != '\0'; i++)
 			std::cout << ptr[i];
 		return 0;

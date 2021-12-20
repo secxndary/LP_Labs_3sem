@@ -71,13 +71,14 @@ namespace GRB
 			Rule::Chain(1, TS('!'))
 		),
 
-		Rule(NS('A'), GRB_ERROR_SERIES + 11, 6,					// Неверный арифметический оператор
+		Rule(NS('A'), GRB_ERROR_SERIES + 11, 7,					// Неверный арифметический оператор
 			Rule::Chain(1, TS('+')),
 			Rule::Chain(1, TS('-')),
 			Rule::Chain(1, TS('*')),
 			Rule::Chain(1, TS('/')),
 			Rule::Chain(1, TS('}')),
-			Rule::Chain(1, TS('{'))
+			Rule::Chain(1, TS('{')),
+			Rule::Chain(1, TS('%'))
 		),
 
 		Rule(NS('V'), GRB_ERROR_SERIES + 12, 3,					// Неверное выражение. Ожидаются только идентификаторы и литералы

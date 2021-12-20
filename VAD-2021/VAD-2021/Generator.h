@@ -1,6 +1,6 @@
 #pragma once
 
-#include"LT.h"
+#include "LT.h"
 #include "IT.h"
 #include "LexAnalysis.h"
 

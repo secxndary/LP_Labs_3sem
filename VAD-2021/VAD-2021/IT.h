@@ -8,8 +8,8 @@
 #define STR_DEFAULT	0x00			//значение по умолчанию для sting
 #define NULLIDX_TI		0xffffffff		//нет элемента таблицы идентификаторов
 #define STR_MAXSIZE	255				//максимальная длина строкового литерала
-#define NUM_MAXSIZE   127		//максимальное значение для типа number
-#define NUM_MINSIZE  -128		//минимальное значение для типа number
+#define NUM_MAXSIZE   255		//максимальное значение для типа number
+#define NUM_MINSIZE  -256		//минимальное значение для типа number
 #define MAX_PARAMS_COUNT 3				//максимальное количество параметров у функции
 #define CONCAT_PARAMS_CNT 2			//кол-во параметров у функции concat
 #define LENGHT_PARAMS_CNT 1	//кол-во параметров у функции lenght

@@ -10,8 +10,8 @@
 #define	LEX_COMMA		 ','	// разделитель параметров 		
 #define	LEX_LEFTBRACE	 '['	// начало блока		
 #define	LEX_BRACELET	 ']'	// конец блока		
-#define LEX_LEFT         '{'    //сдвиг влево
-#define LEX_RIGHT        '}'    //сдвиг вправо
+#define LEX_LEFT         '{'    // сдвиг влево
+#define LEX_RIGHT        '}'    // сдвиг вправо
 #define	LEX_LEFTHESIS	 '('	// начало списка параметров		
 #define	LEX_RIGHTTHESIS	 ')'	// конец списка параметров		
 #define	LEX_PLUS		 '+'	// сложение	
@@ -21,7 +21,7 @@
 #define	LEX_EQUAL		 '='	// присваивание				
 #define LEX_CONDITION	 '?'	// condition:
 #define LEX_DIEZ		 '#'	// разделитель блоков цикла/ усл.выражения
-#define	LEX_LITERAL_NUMO 'q'        //восьмиричный литерал
+#define	LEX_LITERAL_NUMO 'q'    // восьмиричный литерал
 #define LEX_ISTRUE		 'w'	// ложный блок
 #define LEX_ISFALSE		 'r'	// истинный блок
 #define LEX_CYCLE		 'c'	// цикл
@@ -34,11 +34,12 @@
 #define LEX_LESS		 '<'	// проверка на меньше
 #define LEX_EQUALS		 '&'	// проверка на равенство
 #define LEX_NOTEQUALS	 '!'	// проверка на неравенство
-#define	LEXEMA_FIXSIZE   1	        //размер лексемы
-#define	MAXSIZE_LT		 4096	    //максимальное количество строк в ТЛ
+#define	LEXEMA_FIXSIZE   1	    //размер лексемы
+#define	MAXSIZE_LT		 4096	//максимальное количество строк в ТЛ
 #define	NULLDX_TI	 0xffffffff	//нет элемента ТИ
-
-
+#define LEX_MOD			 '%'
+#define POSITIVE_NUMBER  'p'
+#define NEGATIVE_NUMBER  'n'
 namespace LT	//таблица лексем
 {
 	struct Entry
